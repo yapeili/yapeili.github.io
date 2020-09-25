@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="DOM树(dom tree)：DOM结构 当浏览器加载HTML页面时，首先就是DOM结构计算，计算出来的DOM结构就是DOM树(把页面中的HTML标签像树状结构一样，分析出之间的层级关系)  DOM树描述了标签和标签之间的关系（节点间的关系） 我们只要知道任何一个标签，都可以依据DOM中提供的属性和方法，获取到页面中任意一个标签或者节点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js基础10、DOM操作、DOM节点操作">
+<meta property="og:url" content="http://yoursite.com/2019/05/17/js%E5%9F%BA%E7%A1%8010%E3%80%81DOM%E6%93%8D%E4%BD%9C%E3%80%81DOM%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Yapei Li">
+<meta property="og:description" content="DOM树(dom tree)：DOM结构 当浏览器加载HTML页面时，首先就是DOM结构计算，计算出来的DOM结构就是DOM树(把页面中的HTML标签像树状结构一样，分析出之间的层级关系)  DOM树描述了标签和标签之间的关系（节点间的关系） 我们只要知道任何一个标签，都可以依据DOM中提供的属性和方法，获取到页面中任意一个标签或者节点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/jsjc5.jpeg">
+<meta property="article:published_time" content="2019-05-17T13:39:04.000Z">
+<meta property="article:modified_time" content="2019-05-17T13:39:04.000Z">
+<meta property="article:author" content="Yapei Li">
+<meta property="article:tag" content="JS基础">
+<meta property="article:tag" content="Javascript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/jsjc5.jpeg">
+
+<link rel="canonical" href="http://yoursite.com/2019/05/17/js%E5%9F%BA%E7%A1%8010%E3%80%81DOM%E6%93%8D%E4%BD%9C%E3%80%81DOM%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>js基础10、DOM操作、DOM节点操作 | Yapei Li</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yapei Li</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于前端领域</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yapeili" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/17/js%E5%9F%BA%E7%A1%8010%E3%80%81DOM%E6%93%8D%E4%BD%9C%E3%80%81DOM%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          js基础10、DOM操作、DOM节点操作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-17 21:39:04" itemprop="dateCreated datePublished" datetime="2019-05-17T21:39:04+08:00">2019-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Javascript%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Javascript基础</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="DOM树-dom-tree-：DOM结构"><a href="#DOM树-dom-tree-：DOM结构" class="headerlink" title="DOM树(dom tree)：DOM结构"></a>DOM树(dom tree)：DOM结构</h2><blockquote>
+<p>当浏览器加载HTML页面时，首先就是DOM结构计算，计算出来的DOM结构就是<code>DOM树</code>(把页面中的HTML标签像树状结构一样，分析出之间的层级关系)</p>
+</blockquote>
+<h3 id="DOM树描述了标签和标签之间的关系（节点间的关系）"><a href="#DOM树描述了标签和标签之间的关系（节点间的关系）" class="headerlink" title="DOM树描述了标签和标签之间的关系（节点间的关系）"></a>DOM树描述了标签和标签之间的关系（节点间的关系）</h3><blockquote>
+<p>我们只要知道任何一个标签，都可以依据DOM中提供的属性和方法，获取到页面中任意一个标签或者节点</p>
+</blockquote>
+<p><img src="/img/jsjc5.jpeg" alt="Alt text"></p>
+<a id="more"></a>
+
+<h2 id="JS中获取DOM元素的方法"><a href="#JS中获取DOM元素的方法" class="headerlink" title="JS中获取DOM元素的方法"></a>JS中获取DOM元素的方法</h2><ul>
+<li><code>document.getElementById(&#39;id值&#39;)</code></li>
+<li><code>document.documentElement</code>  获取html元素对象</li>
+<li><code>document.body</code>  获取body元素对象</li>
+<li><code>document.head</code>  获取head元素对象</li>
+<li><code>document.getElementsByName(&#39;name属性值&#39;)</code></li>
+<li><code>[context].getElementsByTagName(&#39;标签名&#39;)</code></li>
+<li><code>[context].getElementsByClassName(&#39;class名&#39;)</code></li>
+<li><code>[context].querySelector(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)</code></li>
+<li><code>[context].querySelectorAll(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)</code></li>
+</ul>
+<h3 id="document-getElementById-39-id值-39"><a href="#document-getElementById-39-id值-39" class="headerlink" title="document.getElementById(&#39;id值&#39;)"></a><code>document.getElementById(&#39;id值&#39;)</code></h3><blockquote>
+<p>在整个文档中通过元素的id属性值，获取到这个对象</p>
+<p>getElementById是获取元素的方法</p>
+</blockquote>
+<h4 id="document限定了获取元素的范围，我们把这个范围称之为‘上下文【context】’"><a href="#document限定了获取元素的范围，我们把这个范围称之为‘上下文【context】’" class="headerlink" title="document限定了获取元素的范围，我们把这个范围称之为‘上下文【context】’"></a>document限定了获取元素的范围，我们把这个范围称之为‘上下文【context】’</h4><h4 id="获取到的是对象数据类型的值"><a href="#获取到的是对象数据类型的值" class="headerlink" title="获取到的是对象数据类型的值"></a>获取到的是对象数据类型的值</h4><h4 id="getElementById的上下文只能是document："><a href="#getElementById的上下文只能是document：" class="headerlink" title="getElementById的上下文只能是document："></a><code>getElementById的上下文只能是document：</code></h4><blockquote>
+<p>因为严格意义上，一个id是不能重复出现的，浏览器规定只能在整个文档中可以获取这个唯一id</p>
+</blockquote>
+<h4 id="如果页面中的ID重复了，我们基于这个方法只能获取到第一个元素，后面相同ID元素无法获取"><a href="#如果页面中的ID重复了，我们基于这个方法只能获取到第一个元素，后面相同ID元素无法获取" class="headerlink" title="如果页面中的ID重复了，我们基于这个方法只能获取到第一个元素，后面相同ID元素无法获取"></a>如果页面中的ID重复了，我们基于这个方法<code>只能获取到第一个元素</code>，后面相同ID元素无法获取</h4><h4 id="IE6-7下-会把表单元素的name属性当做ID来使用，所以要注意id和表单元素name属性的重复问题"><a href="#IE6-7下-会把表单元素的name属性当做ID来使用，所以要注意id和表单元素name属性的重复问题" class="headerlink" title="IE6,7下 会把表单元素的name属性当做ID来使用，所以要注意id和表单元素name属性的重复问题"></a><code>IE6,7下 会把表单元素的name属性当做ID来使用</code>，所以要注意id和表单元素name属性的重复问题</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oBox=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;box&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">typeof</span> oBox  =&gt; <span class="string">&quot;object&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//分析包含的属性</span></span><br><span class="line">className：存储的是一个字符串，代表当前元素的样式类名</span><br><span class="line"></span><br><span class="line">oBox.className=<span class="string">&#x27;aaa&#x27;</span>   会覆盖原有的<span class="class"><span class="keyword">class</span></span></span><br><span class="line"><span class="class"><span class="title">oBox</span>.<span class="title">className</span> +</span>=<span class="string">&#x27; aaa&#x27;</span>  不会覆盖原有<span class="class"><span class="keyword">class</span>  新的<span class="title">class</span>前边要有空格</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">id</span>：存储的是当前元素的<span class="title">id</span>值</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">innerHTML</span>：存储当前元素中所有的内容（包含<span class="title">HTML</span>标签）</span></span><br><span class="line"><span class="class"><span class="title">innerText</span>：存储当前元素中所有的文本内容（不包含<span class="title">HTML</span>标签）</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">style</span>：存储当前元素所有的“行内样式”值（获取和操作的都只能是标签上的行内样式，写在样式表中的样式无法获取到）</span></span><br><span class="line"><span class="class"></span></span><br></pre></td></tr></table></figure>
+<h4 id="兼容处理"><a href="#兼容处理" class="headerlink" title="兼容处理"></a>兼容处理</h4><h5 id="在ID重复时获取所有ID为‘aaa’的标签-兼容所有浏览器-获取所有标签，判断id"><a href="#在ID重复时获取所有ID为‘aaa’的标签-兼容所有浏览器-获取所有标签，判断id" class="headerlink" title="在ID重复时获取所有ID为‘aaa’的标签(兼容所有浏览器):获取所有标签，判断id"></a><code>在ID重复时获取所有ID为‘aaa’的标签</code>(兼容所有浏览器):获取所有标签，判断id</h5><blockquote>
+<p><code>在JS中，默认会把元素的ID设置为变量，不需要再进行获取设置，而且ID重复，获取的结果就是一个集合，包含所有ID元素，不重复就是一个元素对象（类似于ById的结果）</code></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">queryAllById</span>(<span class="params">id</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> nodeList=<span class="built_in">document</span>.getElementsByTagName(<span class="string">&#x27;*&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> arr=[];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;nodeList.length;i++)&#123;</span><br><span class="line">         nodeList[i].id=== id?arr.push(nodeList[i]):<span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">&#125;</span><br><span class="line">queryAllById(<span class="string">&#x27;aaa&#x27;</span>)</span><br><span class="line"><span class="comment">//直接用  aaa也行</span></span><br><span class="line"><span class="built_in">console</span>.log(aaa)</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取元素集合（获取多个元素）："><a href="#获取元素集合（获取多个元素）：" class="headerlink" title="获取元素集合（获取多个元素）："></a>获取元素集合（获取多个元素）：</h2><h3 id="context-getElementsByTagName-39-标签名-39-获取一组元素集合"><a href="#context-getElementsByTagName-39-标签名-39-获取一组元素集合" class="headerlink" title="[context].getElementsByTagName(&#39;标签名&#39;)获取一组元素集合"></a><code>[context].getElementsByTagName(&#39;标签名&#39;)</code>获取一组元素集合</h3><blockquote>
+<p>在指定的上下文中，通过元素的标签名<code>获取一组**元素集合**(HTMLCollection)</code></p>
+<p>上下文是我们自己来指定的</p>
+</blockquote>
+<ul>
+<li><p>1、获取的结果是一组元素集合(HTMLCollection，<code>__proto__</code>指向<code>HTMLCollection</code>)（<code>是一个类数组，不能直接使用数组的方法</code>），</p>
+</li>
+<li><p>2、集合中的每一个值又是一个<code>元素对象</code>（<code>对象数据类型</code>，包含很多内置属性，例如：id、className）</p>
+</li>
+<li><p>3、它会把当前上下文中，子子孙孙（后代）层级内的该标签都获取到（<code>并不是只获取到子级</code>）</p>
+</li>
+<li><p>4、基于这个方法<code>获取到的结果永远都是一个集合</code>，不管里边是否有内容，也不管有几项；如果想操作集合中具体的某一项，需要基于索引获取到才可以</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> liList=oBox.getElementsByTagName(<span class="string">&#x27;li&#x27;</span>);</span><br><span class="line">liList[<span class="number">0</span>]  <span class="comment">//就是第一个li(通过索引获取具体某一个li)</span></span><br><span class="line">liList.length  <span class="comment">//集合中li的数量</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="context-getElementsByClassName-39-class名-39-获取到一组元素集合"><a href="#context-getElementsByClassName-39-class名-39-获取到一组元素集合" class="headerlink" title="[context].getElementsByClassName(&#39;class名&#39;)获取到一组元素集合"></a><code>[context].getElementsByClassName(&#39;class名&#39;)</code>获取到一组元素集合</h3><blockquote>
+<p>在指定的上下文中通过元素的样式类名（class）<code>获取到一组**元素集合**</code></p>
+<p>真实项目中，我们经常是基于样式类给元素设置样式，所以JS中经常通过样式类获取元素，<code>不兼容IE6~8</code></p>
+</blockquote>
+<h4 id="解决兼容问题："><a href="#解决兼容问题：" class="headerlink" title="解决兼容问题："></a>解决兼容问题：</h4><p>获取所有标签，筛选他们的class</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Node.prototype.queryElementsByClassName=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">arguments</span>.length === <span class="number">0</span>) <span class="keyword">return</span> [];</span><br><span class="line">    <span class="keyword">var</span> className=<span class="built_in">arguments</span>[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//Array.prototype.slice.call  类数组转化为数组，要不然nodeList.splice不能用</span></span><br><span class="line">    <span class="keyword">var</span> nodeList=<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">this</span>.getElementsByTagName(<span class="string">&#x27;*&#x27;</span>));</span><br><span class="line">    className=className.replace(<span class="regexp">/^| +$/g</span>,<span class="string">&#x27;&#x27;</span>).split(<span class="regexp">/ +/</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;className.length;i++)&#123;</span><br><span class="line">        <span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">&#x27;(^| +)&#x27;</span>+className[i]+<span class="string">&#x27;( +|$)&#x27;</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> j=<span class="number">0</span>;j&lt;nodeList.length;j++)&#123;</span><br><span class="line">             <span class="keyword">if</span>(!reg.test(nodeList[j].className))&#123;</span><br><span class="line">                 nodeList.splice(j,<span class="number">1</span>);</span><br><span class="line">                 j--;</span><br><span class="line">             &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> nodeList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.getElementById(<span class="string">&#x27;J_focus&#x27;</span>).queryElementsByClassName(<span class="string">&#x27;slider_item&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="document-getElementsByName-39-name属性值-39-获取一组节点集合"><a href="#document-getElementsByName-39-name属性值-39-获取一组节点集合" class="headerlink" title="document.getElementsByName(&#39;name属性值&#39;)获取一组节点集合"></a><code>document.getElementsByName(&#39;name属性值&#39;)</code>获取一组节点集合</h3><blockquote>
+<p><code>上下文也只能是document</code></p>
+<p>在整个文档中通过元素的name属性值<code>获取一组**节点集合**（类数组）</code>（<code>__proto__</code>指向<code>NodeList</code>）</p>
+<p>在IE9及以下浏览器中，只对表单元素的name属性起作用（正常来说：我们只会给表单元素设置name；给非表单元素设置name是一个不太符合规范的操作）</p>
+</blockquote>
+<h3 id="context-querySelector-css的选择器-39-aaa-39-39-ddd-39-39-ddd-div-39-获取的是一个元素对象哪怕选择器匹配了多个，也只获取第一个"><a href="#context-querySelector-css的选择器-39-aaa-39-39-ddd-39-39-ddd-div-39-获取的是一个元素对象哪怕选择器匹配了多个，也只获取第一个" class="headerlink" title="[context].querySelector(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)获取的是一个元素对象哪怕选择器匹配了多个，也只获取第一个"></a><code>[context].querySelector(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)</code>获取的是<code>一个元素对象</code>哪怕选择器匹配了多个，也只获取第一个</h3><blockquote>
+<p>在指定的上下文当中基于选择器（类似于css选择器）获取到指定的**<code>元素对象</code>**（获取的是一个对象<code>哪怕选择器匹配了多个</code>，也<code>只获取第一个</code>）</p>
+</blockquote>
+<h3 id="context-querySelectorAll-css的选择器-39-aaa-39-39-ddd-39-39-ddd-div-39-获取到选择器匹配到的所有元素，结果是一个节点集合"><a href="#context-querySelectorAll-css的选择器-39-aaa-39-39-ddd-39-39-ddd-div-39-获取到选择器匹配到的所有元素，结果是一个节点集合" class="headerlink" title="[context].querySelectorAll(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)获取到选择器匹配到的所有元素，结果是一个节点集合"></a><code>[context].querySelectorAll(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)</code>获取到选择器匹配到的<code>所有元素</code>，结果是一个<code>节点集合</code></h3><blockquote>
+<p>在querySelector的基础上，我们获取到选择器<code>匹配到的所有元素</code>，结果是一个<code>节点集合</code>（<code>__proto__</code>指向<code>NodeList</code>）（类数组）</p>
+</blockquote>
+<p><code>querySelector</code>、<code>querySelectorAll</code>都<code>不兼容</code> <code>IE6~8</code>，不考虑兼容的情况下，我们<code>能用别的方法获取尽量不要用这两个</code>，这两个方法消耗性能较大</p>
+<h2 id="获取浏览器一屏幕的宽高（兼容所有浏览器）"><a href="#获取浏览器一屏幕的宽高（兼容所有浏览器）" class="headerlink" title="获取浏览器一屏幕的宽高（兼容所有浏览器）"></a>获取浏览器一屏幕的宽高（兼容所有浏览器）</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.documentElement.clientWidth || <span class="built_in">document</span>.body.clientWidth;</span><br><span class="line"></span><br><span class="line"><span class="built_in">document</span>.documentElement.clientHeight || <span class="built_in">document</span>.body.clientHeight;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DOM中的节点-node-：元本注档1389"><a href="#DOM中的节点-node-：元本注档1389" class="headerlink" title="DOM中的节点(node)：元本注档1389"></a>DOM中的节点(node)：<code>元本注档1389</code></h2><blockquote>
+<p>在html文档中出现的所有东西都是节点</p>
+<blockquote>
+<p>元素节点：html标签；</p>
+<p>文本节点：文字内容；</p>
+<p>注释节点：注释内容；</p>
+<p>文档节点：document；</p>
+</blockquote>
+</blockquote>
+<h3 id="每一种类型的节点都会有一些属性区分自己的特性和特征："><a href="#每一种类型的节点都会有一些属性区分自己的特性和特征：" class="headerlink" title="每一种类型的节点都会有一些属性区分自己的特性和特征："></a>每一种类型的节点都会有一些属性区分自己的特性和特征：</h3><ul>
+<li><code>nodeType</code>：节点类型；</li>
+<li><code>nodeName</code>：节点名称；</li>
+<li><code>nodeValue</code>：节点值；</li>
+</ul>
+<h3 id="元素节点-1"><a href="#元素节点-1" class="headerlink" title="元素节点 1"></a><code>元素节点 1</code></h3><ul>
+<li><code>nodeType</code>：1；</li>
+<li><code>nodeName</code>：大写标签名；</li>
+<li><code>nodeValue</code>：null；</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">oBox.nodeType  <span class="comment">//1</span></span><br><span class="line">oBox.nodeName  <span class="comment">//&quot;DIV&quot;</span></span><br><span class="line">oBox.nodeValue  <span class="comment">//null</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="文本节点-3"><a href="#文本节点-3" class="headerlink" title="文本节点 3"></a><code>文本节点 3</code></h3><ul>
+<li><code>nodeType</code>：3；</li>
+<li><code>nodeName</code>：’#text’；</li>
+<li><code>nodeValue</code>：文本内容；</li>
+<li>在标准浏览器中，会把<code>空格和换行都当做文本节点来处理</code></li>
+</ul>
+<h3 id="注释节点-8"><a href="#注释节点-8" class="headerlink" title="注释节点 8"></a><code>注释节点 8</code></h3><ul>
+<li><code>nodeType</code>：8；</li>
+<li><code>nodeName</code>：’#common’；</li>
+<li><code>nodeValue</code>：注释内容；</li>
+</ul>
+<h3 id="文档节点-9"><a href="#文档节点-9" class="headerlink" title="文档节点 9"></a><code>文档节点 9</code></h3><ul>
+<li><code>nodeType</code>：9；</li>
+<li><code>nodeName</code>：’#document’；</li>
+<li><code>nodeValue</code>：null；</li>
+</ul>
+<h2 id="描述节点之间关系的属性"><a href="#描述节点之间关系的属性" class="headerlink" title="描述节点之间关系的属性"></a>描述节点之间关系的属性</h2><h3 id="parentNode，获取当前节点-唯一的"><a href="#parentNode，获取当前节点-唯一的" class="headerlink" title="parentNode，获取当前节点`唯一的"></a><code>parentNode</code>，获取当前节点`唯一的</h3><h3 id="childNodes，获取当前元素的所有子节点"><a href="#childNodes，获取当前元素的所有子节点" class="headerlink" title="childNodes，获取当前元素的所有子节点"></a><code>childNodes</code>，获取当前元素的<code>所有子节点</code></h3><ul>
+<li>1、子节点：只获取到<code>儿子级别</code>，不能获取到孙子级及以后</li>
+<li>2、所有：<code>包含元素节点，文本节点等</code></li>
+</ul>
+<h3 id="children，获取当前元素的所有元素子节点"><a href="#children，获取当前元素的所有元素子节点" class="headerlink" title="children，获取当前元素的所有元素子节点"></a><code>children</code>，获取当前元素的<code>所有元素子节点</code></h3><ul>
+<li>在I<code>E6~8</code>中会把注释节点也当做元素节点获取到，所以兼容性不好</li>
+<li>元素节点</li>
+</ul>
+<h3 id="previousSibling-，获取当前节点的上一个哥哥节点（获取的哥哥可能是元素也可能是文本等）"><a href="#previousSibling-，获取当前节点的上一个哥哥节点（获取的哥哥可能是元素也可能是文本等）" class="headerlink" title="previousSibling ，获取当前节点的上一个哥哥节点（获取的哥哥可能是元素也可能是文本等）"></a><code>previousSibling</code> ，获取当前节点的<code>上一个哥哥节点</code>（获取的哥哥<code>可能是元素也可能是文本</code>等）</h3><h3 id="previousElementSibling：获取上一个哥哥-元素-节点（不兼容IE6-8）"><a href="#previousElementSibling：获取上一个哥哥-元素-节点（不兼容IE6-8）" class="headerlink" title="previousElementSibling：获取上一个哥哥 元素 节点（不兼容IE6~8）"></a><code>previousElementSibling</code>：获取<code>上一个哥哥 元素 节点（不兼容IE6~8）</code></h3><h3 id="nextSibling-，获取当前节点的下一个弟弟节点（紧跟的节点）（获取的弟弟可能是元素也可能是文本等）"><a href="#nextSibling-，获取当前节点的下一个弟弟节点（紧跟的节点）（获取的弟弟可能是元素也可能是文本等）" class="headerlink" title="nextSibling ，获取当前节点的下一个弟弟节点（紧跟的节点）（获取的弟弟可能是元素也可能是文本等）"></a><code>nextSibling</code> ，获取当前节点的<code>下一个弟弟节点（紧跟的节点）</code>（获取的弟弟可能是元素也可能是文本等）</h3><h3 id="nextElementSibling：获取下一个弟弟-元素-节点（不兼容IE6-8）"><a href="#nextElementSibling：获取下一个弟弟-元素-节点（不兼容IE6-8）" class="headerlink" title="nextElementSibling：获取下一个弟弟 元素 节点（不兼容IE6~8）"></a><code>nextElementSibling</code>：获取<code>下一个弟弟 元素 节点（不兼容IE6~8）</code></h3><h3 id="firstChild-，获取当前元素的第一个子节点（可能是元素也可能是文本等）"><a href="#firstChild-，获取当前元素的第一个子节点（可能是元素也可能是文本等）" class="headerlink" title="firstChild ，获取当前元素的第一个子节点（可能是元素也可能是文本等）"></a><code>firstChild</code> ，获取当前元素的<code>第一个子节点</code>（可能是元素也可能是文本等）</h3><h3 id="firstElmentChild：获取第一个-元素-子节点（不兼容IE6-8）"><a href="#firstElmentChild：获取第一个-元素-子节点（不兼容IE6-8）" class="headerlink" title="firstElmentChild：获取第一个 元素 子节点（不兼容IE6~8）"></a><code>firstElmentChild</code>：获取<code>第一个 元素 子节点（不兼容IE6~8）</code></h3><h3 id="lastChild-，获取当前元素的最后一个子节点（可能是元素也可能是文本等）"><a href="#lastChild-，获取当前元素的最后一个子节点（可能是元素也可能是文本等）" class="headerlink" title="lastChild ，获取当前元素的最后一个子节点（可能是元素也可能是文本等）"></a><code>lastChild</code> ，获取当前元素的<code>最后一个子节点</code>（可能是元素也可能是文本等）</h3><h3 id="lastElmentChild：获取最后一个-元素-子节点（不兼容IE6-8）"><a href="#lastElmentChild：获取最后一个-元素-子节点（不兼容IE6-8）" class="headerlink" title="lastElmentChild：获取最后一个 元素 子节点（不兼容IE6~8）"></a><code>lastElmentChild</code>：获取<code>最后一个 元素 子节点（不兼容IE6~8）</code></h3><h3 id="兼容处理-1"><a href="#兼容处理-1" class="headerlink" title="兼容处理"></a>兼容处理</h3><h4 id="获取当前元素的所有元素子节点"><a href="#获取当前元素的所有元素子节点" class="headerlink" title="获取当前元素的所有元素子节点"></a><code>获取当前元素的所有元素子节点</code></h4><blockquote>
+<p>解决<code>children</code>在<code>IE6~8</code>中会<code>把注释节点也当做元素节点</code>获取到的问题</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">children</span>(<span class="params">curEle</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//1、获取当前元素下的所有子节点</span></span><br><span class="line">    <span class="comment">//2、筛选出来所有的元素子节点（nodeType===1）</span></span><br><span class="line">    <span class="keyword">var</span> nodeList=curEle.children;</span><br><span class="line">    <span class="keyword">var</span> res=[];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;nodeList.length;i++)&#123;</span><br><span class="line">         <span class="keyword">var</span> item=nodeList[i];</span><br><span class="line">         <span class="keyword">if</span>(item.nodeType === <span class="number">1</span>)&#123;</span><br><span class="line">              res.push(item)</span><br><span class="line">         &#125; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取当前元素的上一个哥哥元素节点"><a href="#获取当前元素的上一个哥哥元素节点" class="headerlink" title="获取当前元素的上一个哥哥元素节点"></a><code>获取当前元素的上一个哥哥元素节点</code></h4><blockquote>
+<p><code>previousSibling</code>:上一个哥哥节点</p>
+<p><code>previousElementSibling</code>：上一个哥哥元素子节点</p>
+<p>解决<code>previousElementSibling</code>不兼容IE6~8的问题</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">prevElement</span>(<span class="params">curEle</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//1、获取上一个哥哥节点</span></span><br><span class="line">    <span class="comment">//2、判断上一个各个节点是不是元素节点（nodeType===1）</span></span><br><span class="line">        <span class="comment">//不是再往前找</span></span><br><span class="line">    <span class="keyword">var</span> node=curEle.previousSibling;</span><br><span class="line">    <span class="comment">//node存在 并且  不是元素节点   才往前找</span></span><br><span class="line">    <span class="keyword">while</span>(node &amp;&amp; node.nodeType !== <span class="number">1</span>)&#123;</span><br><span class="line">        node=node.previousSibling;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DOM的增删改"><a href="#DOM的增删改" class="headerlink" title="DOM的增删改"></a>DOM的增删改</h2><h3 id="document-createElement-‘标签名’"><a href="#document-createElement-‘标签名’" class="headerlink" title="document.createElement(‘标签名’)"></a>document.createElement(‘标签名’)</h3><blockquote>
+<p>创建一个元素标签（元素对象）</p>
+</blockquote>
+<h3 id="createTextNode，创建一个文本节点"><a href="#createTextNode，创建一个文本节点" class="headerlink" title="createTextNode，创建一个文本节点"></a>createTextNode，创建一个文本节点</h3><h3 id="container-appendChild-创建的元素对象或已有的元素对象-，把一个元素对象插入到指定容器末尾"><a href="#container-appendChild-创建的元素对象或已有的元素对象-，把一个元素对象插入到指定容器末尾" class="headerlink" title="[container].appendChild(创建的元素对象或已有的元素对象)，把一个元素对象插入到指定容器末尾"></a>[container].appendChild(创建的元素对象或已有的元素对象)，把一个元素对象插入到指定容器<code>末尾</code></h3><blockquote>
+<p>如果文档树中已经存在了 <code>newchild</code>，它将从文档树中删除，然后重新插入它的新位置（<code>如果是dom树中已有的元素对象，会把原有的删除，然后再添加到新的地方</code>）</p>
+</blockquote>
+<h3 id="container-insertBefore-创建的元素对象，要插入其前面的元素"><a href="#container-insertBefore-创建的元素对象，要插入其前面的元素" class="headerlink" title="[container].insertBefore(创建的元素对象，要插入其前面的元素)"></a>[container].insertBefore(创建的元素对象，要插入其前面的元素)</h3><ul>
+<li>1、把一个元素对象插入到<code>指定容器中</code>某一个元素标签之前</li>
+<li>2、如果<code>未规定</code> 要插入其前面的元素，则 insertBefore 方法会在<code>结尾插入 newnode</code></li>
+</ul>
+<h3 id="curEle要克隆的元素-cloneNode-，把一个节点进行克隆"><a href="#curEle要克隆的元素-cloneNode-，把一个节点进行克隆" class="headerlink" title="[curEle要克隆的元素].cloneNode()，把一个节点进行克隆"></a>[curEle要克隆的元素].cloneNode()，把一个节点进行克隆</h3><h4 id="1、-curEle要克隆的元素-cloneNode-：浅克隆（只克隆当前的标签，标签的样式也有，只是没有innerHTML）"><a href="#1、-curEle要克隆的元素-cloneNode-：浅克隆（只克隆当前的标签，标签的样式也有，只是没有innerHTML）" class="headerlink" title="1、[curEle要克隆的元素].cloneNode()：浅克隆（只克隆当前的标签，标签的样式也有，只是没有innerHTML）"></a>1、[curEle要克隆的元素].cloneNode()：浅克隆（只克隆当前的标签，标签的样式也有，只是没有innerHTML）</h4><h4 id="2、-curEle要克隆的元素-cloneNode-true-：深克隆，当前标签及里面的内容都一起克隆了"><a href="#2、-curEle要克隆的元素-cloneNode-true-：深克隆，当前标签及里面的内容都一起克隆了" class="headerlink" title="2、[curEle要克隆的元素].cloneNode(true)：深克隆，当前标签及里面的内容都一起克隆了"></a>2、[curEle要克隆的元素].cloneNode(true)：深克隆，当前标签及里面的内容都一起克隆了</h4><h3 id="container-removeChild-要删除的元素-，在指定容器当中删除某一个元素"><a href="#container-removeChild-要删除的元素-，在指定容器当中删除某一个元素" class="headerlink" title="[container].removeChild(要删除的元素)，在指定容器当中删除某一个元素"></a>[container].removeChild(要删除的元素)，在指定容器当中删除某一个元素</h3><h3 id="curEle要操作的元素-set-get-removeAttribute-属性名-属性值"><a href="#curEle要操作的元素-set-get-removeAttribute-属性名-属性值" class="headerlink" title="[curEle要操作的元素].set/get/removeAttribute(属性名,属性值)"></a>[curEle要操作的元素].set/get/removeAttribute(属性名,属性值)</h3><blockquote>
+<p>设置、获取、删除当前元素的某一个<code>自定义属性</code>;</p>
+<p>[curEle要操作的元素].setAttribute(属性名,属性值)</p>
+<p>[curEle要操作的元素].getAttribute(属性名)</p>
+<p>[curEle要操作的元素].removeAttribute(属性名)</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oBox=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;box&#x27;</span>);</span><br><span class="line"><span class="comment">//=&gt;1、把当前元素作为一个对象，在对象对应的堆内存中新增一个自定义的属性</span></span><br><span class="line">oBox.myIndex=<span class="number">10</span>;                <span class="comment">//设置</span></span><br><span class="line"><span class="built_in">console</span>.log(oBox.myIndex)       <span class="comment">//获取</span></span><br><span class="line"><span class="keyword">delete</span> oBox.myIndex；           <span class="comment">//删除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//2、基于Attribute等dom方法完成自定义属性的设置</span></span><br><span class="line">oBox.setAttribute(<span class="string">&#x27;myHahaha&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>)         <span class="comment">//设置</span></span><br><span class="line">oBox.getAttribute(<span class="string">&#x27;myHahaha&#x27;</span>)                  <span class="comment">//获取</span></span><br><span class="line">oBox.removeAttribute(<span class="string">&#x27;myHahaha&#x27;</span>)               <span class="comment">//删除</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong><code>上边两种方法属于独立的运作体制，不能相互混淆使用 </code></strong></p>
+</blockquote>
+<ul>
+<li><p>第一种是<code>基于对象键值对操作方式</code> ，修改当前元素对象的堆内存空间来完成（<code>不存在时</code>获取到的是<code>undefined</code>）</p>
+</li>
+<li><p>第二种是<code>直接修改页面中HTML标签的结构来完成的</code>,此种办法设置的自定义属性<code>可以在结构上呈现出来</code>（<code>不存在时</code>获取到的是<code>null</code>）</p>
+</li>
+<li><p>第一种方法设置的属性在elements控制台是<code>看不到的</code>，第二种设置的<code>能看到</code>（<code>myIndex看不到，myHahaha看得到</code>）</p>
+</li>
+<li><p>基于setAttribute设置的自定义属性值<code>都是字符串</code></p>
+</li>
+<li><p>能用第一种不要用第二种，第二种结构上可见易被攻击，而且第二种操作的是dom耗费性能</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> oBox=<span class="built_in">document</span>.getElementById(<span class="string">&#x27;box&#x27;</span>);</span><br><span class="line"><span class="comment">//=&gt;1、把当前元素作为一个对象，在对象对应的堆内存中新增一个自定义的属性</span></span><br><span class="line">oBox.myIndex=<span class="number">10</span>;                <span class="comment">//设置</span></span><br><span class="line"><span class="built_in">console</span>.log(oBox.getAttribute(<span class="string">&#x27;myIndex&#x27;</span>))       <span class="comment">//null</span></span><br><span class="line"></span><br><span class="line">oBox.setAttribute(<span class="string">&#x27;m&#x27;</span>,<span class="string">&#x27;123456&#x27;</span>)         <span class="comment">//设置</span></span><br><span class="line"><span class="built_in">console</span>.log(oBox.m)       <span class="comment">//undefined</span></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="node-attributes，获取指定节点的属性集合"><a href="#node-attributes，获取指定节点的属性集合" class="headerlink" title="node.attributes，获取指定节点的属性集合"></a>node.attributes，获取指定节点的属性集合</h3><blockquote>
+<p>用法：document.getElementsByTagName(“BUTTON”)[0].attributes;</p>
+<p>可以使用 length 属性来确定属性的数量，能够遍历所有的属性节点并提取需要的信息</p>
+</blockquote>
+<h3 id="解析一个URL字符串问号传参和HASH值部分：a元素对象的hash-search两个属性分别存储了哈希值和参数值"><a href="#解析一个URL字符串问号传参和HASH值部分：a元素对象的hash-search两个属性分别存储了哈希值和参数值" class="headerlink" title="解析一个URL字符串问号传参和HASH值部分：a元素对象的hash/search两个属性分别存储了哈希值和参数值"></a><code>解析一个URL字符串问号传参和HASH值部分</code>：a元素对象的hash/search两个属性分别存储了哈希值和参数值</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str=<span class="string">&quot;http://www.baidu.com/stu?lx=1&amp;name=AA&amp;age=20#haha&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">queryURLParametr</span>(<span class="params">str</span>)</span>&#123;</span><br><span class="line">    <span class="comment">//1、创建一个A标签，把需要解析的地址当做a标签的href赋值</span></span><br><span class="line">    <span class="keyword">var</span> newA=<span class="built_in">document</span>.createElement(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line">    newA.href=str;</span><br><span class="line">        <span class="comment">//页面不需要展示newA，我们只是利用他的属性而已，所以不需要添加到页面中</span></span><br><span class="line">    <span class="comment">//2、a元素对象的hash/search两个属性分别存储了哈希值和参数值</span></span><br><span class="line">    <span class="keyword">var</span> search=newA.search.substr(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">var</span> hash=newA.hash.substr(<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//3、分别解析出hash和参数即可</span></span><br><span class="line">    <span class="keyword">var</span> obj=&#123;&#125;;</span><br><span class="line">    hash?obj.HASH=hash:<span class="literal">null</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(search)&#123;</span><br><span class="line">        <span class="keyword">var</span> search=search.split(<span class="string">&#x27;&amp;&#x27;</span>);   <span class="comment">//[&quot;lx=1&quot;,&quot;name=AA&quot;,&quot;age=20&quot;]</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;search.length;i++)&#123;</span><br><span class="line">            <span class="keyword">var</span> itemArr=search[i].split(<span class="string">&#x27;=&#x27;</span>);   <span class="comment">//[&quot;lx&quot;,&quot;1&quot;]</span></span><br><span class="line">            obj[itemArr[<span class="number">0</span>]]=itemArr[<span class="number">1</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/JS%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> JS基础</a>
+              <a href="/tags/Javascript/" rel="tag"><i class="fa fa-tag"></i> Javascript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/16/js%E5%9F%BA%E7%A1%809%E3%80%81%20%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0Math/" rel="prev" title="js基础9、 数学函数Math">
+      <i class="fa fa-chevron-left"></i> js基础9、 数学函数Math
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/05/18/js%E9%AB%98%E9%98%B61%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%81%E5%A0%86%E6%A0%88%E5%86%85%E5%AD%98/" rel="next" title="js高阶1、数据类型的核心操作原理、堆栈内存">
+      js高阶1、数据类型的核心操作原理、堆栈内存 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM%E6%A0%91-dom-tree-%EF%BC%9ADOM%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">DOM树(dom tree)：DOM结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM%E6%A0%91%E6%8F%8F%E8%BF%B0%E4%BA%86%E6%A0%87%E7%AD%BE%E5%92%8C%E6%A0%87%E7%AD%BE%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%88%E8%8A%82%E7%82%B9%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">DOM树描述了标签和标签之间的关系（节点间的关系）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS%E4%B8%AD%E8%8E%B7%E5%8F%96DOM%E5%85%83%E7%B4%A0%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">JS中获取DOM元素的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#document-getElementById-39-id%E5%80%BC-39"><span class="nav-number">2.1.</span> <span class="nav-text">document.getElementById(&#39;id值&#39;)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#document%E9%99%90%E5%AE%9A%E4%BA%86%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E7%9A%84%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%91%E4%BB%AC%E6%8A%8A%E8%BF%99%E4%B8%AA%E8%8C%83%E5%9B%B4%E7%A7%B0%E4%B9%8B%E4%B8%BA%E2%80%98%E4%B8%8A%E4%B8%8B%E6%96%87%E3%80%90context%E3%80%91%E2%80%99"><span class="nav-number">2.1.1.</span> <span class="nav-text">document限定了获取元素的范围，我们把这个范围称之为‘上下文【context】’</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%88%B0%E7%9A%84%E6%98%AF%E5%AF%B9%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%80%BC"><span class="nav-number">2.1.2.</span> <span class="nav-text">获取到的是对象数据类型的值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getElementById%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8F%AA%E8%83%BD%E6%98%AFdocument%EF%BC%9A"><span class="nav-number">2.1.3.</span> <span class="nav-text">getElementById的上下文只能是document：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E9%A1%B5%E9%9D%A2%E4%B8%AD%E7%9A%84ID%E9%87%8D%E5%A4%8D%E4%BA%86%EF%BC%8C%E6%88%91%E4%BB%AC%E5%9F%BA%E4%BA%8E%E8%BF%99%E4%B8%AA%E6%96%B9%E6%B3%95%E5%8F%AA%E8%83%BD%E8%8E%B7%E5%8F%96%E5%88%B0%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%EF%BC%8C%E5%90%8E%E9%9D%A2%E7%9B%B8%E5%90%8CID%E5%85%83%E7%B4%A0%E6%97%A0%E6%B3%95%E8%8E%B7%E5%8F%96"><span class="nav-number">2.1.4.</span> <span class="nav-text">如果页面中的ID重复了，我们基于这个方法只能获取到第一个元素，后面相同ID元素无法获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IE6-7%E4%B8%8B-%E4%BC%9A%E6%8A%8A%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0%E7%9A%84name%E5%B1%9E%E6%80%A7%E5%BD%93%E5%81%9AID%E6%9D%A5%E4%BD%BF%E7%94%A8%EF%BC%8C%E6%89%80%E4%BB%A5%E8%A6%81%E6%B3%A8%E6%84%8Fid%E5%92%8C%E8%A1%A8%E5%8D%95%E5%85%83%E7%B4%A0name%E5%B1%9E%E6%80%A7%E7%9A%84%E9%87%8D%E5%A4%8D%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.5.</span> <span class="nav-text">IE6,7下 会把表单元素的name属性当做ID来使用，所以要注意id和表单元素name属性的重复问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%BC%E5%AE%B9%E5%A4%84%E7%90%86"><span class="nav-number">2.1.6.</span> <span class="nav-text">兼容处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8ID%E9%87%8D%E5%A4%8D%E6%97%B6%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89ID%E4%B8%BA%E2%80%98aaa%E2%80%99%E7%9A%84%E6%A0%87%E7%AD%BE-%E5%85%BC%E5%AE%B9%E6%89%80%E6%9C%89%E6%B5%8F%E8%A7%88%E5%99%A8-%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E6%A0%87%E7%AD%BE%EF%BC%8C%E5%88%A4%E6%96%ADid"><span class="nav-number">2.1.6.1.</span> <span class="nav-text">在ID重复时获取所有ID为‘aaa’的标签(兼容所有浏览器):获取所有标签，判断id</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%85%83%E7%B4%A0%E9%9B%86%E5%90%88%EF%BC%88%E8%8E%B7%E5%8F%96%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%EF%BC%89%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">获取元素集合（获取多个元素）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#context-getElementsByTagName-39-%E6%A0%87%E7%AD%BE%E5%90%8D-39-%E8%8E%B7%E5%8F%96%E4%B8%80%E7%BB%84%E5%85%83%E7%B4%A0%E9%9B%86%E5%90%88"><span class="nav-number">3.1.</span> <span class="nav-text">[context].getElementsByTagName(&#39;标签名&#39;)获取一组元素集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-getElementsByClassName-39-class%E5%90%8D-39-%E8%8E%B7%E5%8F%96%E5%88%B0%E4%B8%80%E7%BB%84%E5%85%83%E7%B4%A0%E9%9B%86%E5%90%88"><span class="nav-number">3.2.</span> <span class="nav-text">[context].getElementsByClassName(&#39;class名&#39;)获取到一组元素集合</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%85%BC%E5%AE%B9%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">解决兼容问题：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#document-getElementsByName-39-name%E5%B1%9E%E6%80%A7%E5%80%BC-39-%E8%8E%B7%E5%8F%96%E4%B8%80%E7%BB%84%E8%8A%82%E7%82%B9%E9%9B%86%E5%90%88"><span class="nav-number">3.3.</span> <span class="nav-text">document.getElementsByName(&#39;name属性值&#39;)获取一组节点集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-querySelector-css%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-39-aaa-39-39-ddd-39-39-ddd-div-39-%E8%8E%B7%E5%8F%96%E7%9A%84%E6%98%AF%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1%E5%93%AA%E6%80%95%E9%80%89%E6%8B%A9%E5%99%A8%E5%8C%B9%E9%85%8D%E4%BA%86%E5%A4%9A%E4%B8%AA%EF%BC%8C%E4%B9%9F%E5%8F%AA%E8%8E%B7%E5%8F%96%E7%AC%AC%E4%B8%80%E4%B8%AA"><span class="nav-number">3.4.</span> <span class="nav-text">[context].querySelector(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)获取的是一个元素对象哪怕选择器匹配了多个，也只获取第一个</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context-querySelectorAll-css%E7%9A%84%E9%80%89%E6%8B%A9%E5%99%A8-39-aaa-39-39-ddd-39-39-ddd-div-39-%E8%8E%B7%E5%8F%96%E5%88%B0%E9%80%89%E6%8B%A9%E5%99%A8%E5%8C%B9%E9%85%8D%E5%88%B0%E7%9A%84%E6%89%80%E6%9C%89%E5%85%83%E7%B4%A0%EF%BC%8C%E7%BB%93%E6%9E%9C%E6%98%AF%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9%E9%9B%86%E5%90%88"><span class="nav-number">3.5.</span> <span class="nav-text">[context].querySelectorAll(css的选择器:&#39;#aaa&#39;&#39;.ddd&#39;&#39;.ddd div&#39;)获取到选择器匹配到的所有元素，结果是一个节点集合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E5%B1%8F%E5%B9%95%E7%9A%84%E5%AE%BD%E9%AB%98%EF%BC%88%E5%85%BC%E5%AE%B9%E6%89%80%E6%9C%89%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">获取浏览器一屏幕的宽高（兼容所有浏览器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM%E4%B8%AD%E7%9A%84%E8%8A%82%E7%82%B9-node-%EF%BC%9A%E5%85%83%E6%9C%AC%E6%B3%A8%E6%A1%A31389"><span class="nav-number">5.</span> <span class="nav-text">DOM中的节点(node)：元本注档1389</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%80%E7%A7%8D%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%8A%82%E7%82%B9%E9%83%BD%E4%BC%9A%E6%9C%89%E4%B8%80%E4%BA%9B%E5%B1%9E%E6%80%A7%E5%8C%BA%E5%88%86%E8%87%AA%E5%B7%B1%E7%9A%84%E7%89%B9%E6%80%A7%E5%92%8C%E7%89%B9%E5%BE%81%EF%BC%9A"><span class="nav-number">5.1.</span> <span class="nav-text">每一种类型的节点都会有一些属性区分自己的特性和特征：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%83%E7%B4%A0%E8%8A%82%E7%82%B9-1"><span class="nav-number">5.2.</span> <span class="nav-text">元素节点 1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E8%8A%82%E7%82%B9-3"><span class="nav-number">5.3.</span> <span class="nav-text">文本节点 3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E9%87%8A%E8%8A%82%E7%82%B9-8"><span class="nav-number">5.4.</span> <span class="nav-text">注释节点 8</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E8%8A%82%E7%82%B9-9"><span class="nav-number">5.5.</span> <span class="nav-text">文档节点 9</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%8F%E8%BF%B0%E8%8A%82%E7%82%B9%E4%B9%8B%E9%97%B4%E5%85%B3%E7%B3%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">描述节点之间关系的属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#parentNode%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E8%8A%82%E7%82%B9-%E5%94%AF%E4%B8%80%E7%9A%84"><span class="nav-number">6.1.</span> <span class="nav-text">parentNode，获取当前节点&#96;唯一的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#childNodes%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E6%89%80%E6%9C%89%E5%AD%90%E8%8A%82%E7%82%B9"><span class="nav-number">6.2.</span> <span class="nav-text">childNodes，获取当前元素的所有子节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#children%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E6%89%80%E6%9C%89%E5%85%83%E7%B4%A0%E5%AD%90%E8%8A%82%E7%82%B9"><span class="nav-number">6.3.</span> <span class="nav-text">children，获取当前元素的所有元素子节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#previousSibling-%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E8%8A%82%E7%82%B9%E7%9A%84%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%93%A5%E5%93%A5%E8%8A%82%E7%82%B9%EF%BC%88%E8%8E%B7%E5%8F%96%E7%9A%84%E5%93%A5%E5%93%A5%E5%8F%AF%E8%83%BD%E6%98%AF%E5%85%83%E7%B4%A0%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E6%96%87%E6%9C%AC%E7%AD%89%EF%BC%89"><span class="nav-number">6.4.</span> <span class="nav-text">previousSibling ，获取当前节点的上一个哥哥节点（获取的哥哥可能是元素也可能是文本等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#previousElementSibling%EF%BC%9A%E8%8E%B7%E5%8F%96%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%93%A5%E5%93%A5-%E5%85%83%E7%B4%A0-%E8%8A%82%E7%82%B9%EF%BC%88%E4%B8%8D%E5%85%BC%E5%AE%B9IE6-8%EF%BC%89"><span class="nav-number">6.5.</span> <span class="nav-text">previousElementSibling：获取上一个哥哥 元素 节点（不兼容IE6~8）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nextSibling-%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E8%8A%82%E7%82%B9%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%BC%9F%E5%BC%9F%E8%8A%82%E7%82%B9%EF%BC%88%E7%B4%A7%E8%B7%9F%E7%9A%84%E8%8A%82%E7%82%B9%EF%BC%89%EF%BC%88%E8%8E%B7%E5%8F%96%E7%9A%84%E5%BC%9F%E5%BC%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E5%85%83%E7%B4%A0%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E6%96%87%E6%9C%AC%E7%AD%89%EF%BC%89"><span class="nav-number">6.6.</span> <span class="nav-text">nextSibling ，获取当前节点的下一个弟弟节点（紧跟的节点）（获取的弟弟可能是元素也可能是文本等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nextElementSibling%EF%BC%9A%E8%8E%B7%E5%8F%96%E4%B8%8B%E4%B8%80%E4%B8%AA%E5%BC%9F%E5%BC%9F-%E5%85%83%E7%B4%A0-%E8%8A%82%E7%82%B9%EF%BC%88%E4%B8%8D%E5%85%BC%E5%AE%B9IE6-8%EF%BC%89"><span class="nav-number">6.7.</span> <span class="nav-text">nextElementSibling：获取下一个弟弟 元素 节点（不兼容IE6~8）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#firstChild-%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%88%E5%8F%AF%E8%83%BD%E6%98%AF%E5%85%83%E7%B4%A0%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E6%96%87%E6%9C%AC%E7%AD%89%EF%BC%89"><span class="nav-number">6.8.</span> <span class="nav-text">firstChild ，获取当前元素的第一个子节点（可能是元素也可能是文本等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#firstElmentChild%EF%BC%9A%E8%8E%B7%E5%8F%96%E7%AC%AC%E4%B8%80%E4%B8%AA-%E5%85%83%E7%B4%A0-%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%88%E4%B8%8D%E5%85%BC%E5%AE%B9IE6-8%EF%BC%89"><span class="nav-number">6.9.</span> <span class="nav-text">firstElmentChild：获取第一个 元素 子节点（不兼容IE6~8）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lastChild-%EF%BC%8C%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%88%E5%8F%AF%E8%83%BD%E6%98%AF%E5%85%83%E7%B4%A0%E4%B9%9F%E5%8F%AF%E8%83%BD%E6%98%AF%E6%96%87%E6%9C%AC%E7%AD%89%EF%BC%89"><span class="nav-number">6.10.</span> <span class="nav-text">lastChild ，获取当前元素的最后一个子节点（可能是元素也可能是文本等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lastElmentChild%EF%BC%9A%E8%8E%B7%E5%8F%96%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA-%E5%85%83%E7%B4%A0-%E5%AD%90%E8%8A%82%E7%82%B9%EF%BC%88%E4%B8%8D%E5%85%BC%E5%AE%B9IE6-8%EF%BC%89"><span class="nav-number">6.11.</span> <span class="nav-text">lastElmentChild：获取最后一个 元素 子节点（不兼容IE6~8）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%BC%E5%AE%B9%E5%A4%84%E7%90%86-1"><span class="nav-number">6.12.</span> <span class="nav-text">兼容处理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E6%89%80%E6%9C%89%E5%85%83%E7%B4%A0%E5%AD%90%E8%8A%82%E7%82%B9"><span class="nav-number">6.12.1.</span> <span class="nav-text">获取当前元素的所有元素子节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%8A%E4%B8%80%E4%B8%AA%E5%93%A5%E5%93%A5%E5%85%83%E7%B4%A0%E8%8A%82%E7%82%B9"><span class="nav-number">6.12.2.</span> <span class="nav-text">获取当前元素的上一个哥哥元素节点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DOM%E7%9A%84%E5%A2%9E%E5%88%A0%E6%94%B9"><span class="nav-number">7.</span> <span class="nav-text">DOM的增删改</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#document-createElement-%E2%80%98%E6%A0%87%E7%AD%BE%E5%90%8D%E2%80%99"><span class="nav-number">7.1.</span> <span class="nav-text">document.createElement(‘标签名’)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#createTextNode%EF%BC%8C%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%87%E6%9C%AC%E8%8A%82%E7%82%B9"><span class="nav-number">7.2.</span> <span class="nav-text">createTextNode，创建一个文本节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#container-appendChild-%E5%88%9B%E5%BB%BA%E7%9A%84%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1%E6%88%96%E5%B7%B2%E6%9C%89%E7%9A%84%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1-%EF%BC%8C%E6%8A%8A%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1%E6%8F%92%E5%85%A5%E5%88%B0%E6%8C%87%E5%AE%9A%E5%AE%B9%E5%99%A8%E6%9C%AB%E5%B0%BE"><span class="nav-number">7.3.</span> <span class="nav-text">[container].appendChild(创建的元素对象或已有的元素对象)，把一个元素对象插入到指定容器末尾</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#container-insertBefore-%E5%88%9B%E5%BB%BA%E7%9A%84%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1%EF%BC%8C%E8%A6%81%E6%8F%92%E5%85%A5%E5%85%B6%E5%89%8D%E9%9D%A2%E7%9A%84%E5%85%83%E7%B4%A0"><span class="nav-number">7.4.</span> <span class="nav-text">[container].insertBefore(创建的元素对象，要插入其前面的元素)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#curEle%E8%A6%81%E5%85%8B%E9%9A%86%E7%9A%84%E5%85%83%E7%B4%A0-cloneNode-%EF%BC%8C%E6%8A%8A%E4%B8%80%E4%B8%AA%E8%8A%82%E7%82%B9%E8%BF%9B%E8%A1%8C%E5%85%8B%E9%9A%86"><span class="nav-number">7.5.</span> <span class="nav-text">[curEle要克隆的元素].cloneNode()，把一个节点进行克隆</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1%E3%80%81-curEle%E8%A6%81%E5%85%8B%E9%9A%86%E7%9A%84%E5%85%83%E7%B4%A0-cloneNode-%EF%BC%9A%E6%B5%85%E5%85%8B%E9%9A%86%EF%BC%88%E5%8F%AA%E5%85%8B%E9%9A%86%E5%BD%93%E5%89%8D%E7%9A%84%E6%A0%87%E7%AD%BE%EF%BC%8C%E6%A0%87%E7%AD%BE%E7%9A%84%E6%A0%B7%E5%BC%8F%E4%B9%9F%E6%9C%89%EF%BC%8C%E5%8F%AA%E6%98%AF%E6%B2%A1%E6%9C%89innerHTML%EF%BC%89"><span class="nav-number">7.5.1.</span> <span class="nav-text">1、[curEle要克隆的元素].cloneNode()：浅克隆（只克隆当前的标签，标签的样式也有，只是没有innerHTML）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2%E3%80%81-curEle%E8%A6%81%E5%85%8B%E9%9A%86%E7%9A%84%E5%85%83%E7%B4%A0-cloneNode-true-%EF%BC%9A%E6%B7%B1%E5%85%8B%E9%9A%86%EF%BC%8C%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E5%8F%8A%E9%87%8C%E9%9D%A2%E7%9A%84%E5%86%85%E5%AE%B9%E9%83%BD%E4%B8%80%E8%B5%B7%E5%85%8B%E9%9A%86%E4%BA%86"><span class="nav-number">7.5.2.</span> <span class="nav-text">2、[curEle要克隆的元素].cloneNode(true)：深克隆，当前标签及里面的内容都一起克隆了</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#container-removeChild-%E8%A6%81%E5%88%A0%E9%99%A4%E7%9A%84%E5%85%83%E7%B4%A0-%EF%BC%8C%E5%9C%A8%E6%8C%87%E5%AE%9A%E5%AE%B9%E5%99%A8%E5%BD%93%E4%B8%AD%E5%88%A0%E9%99%A4%E6%9F%90%E4%B8%80%E4%B8%AA%E5%85%83%E7%B4%A0"><span class="nav-number">7.6.</span> <span class="nav-text">[container].removeChild(要删除的元素)，在指定容器当中删除某一个元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#curEle%E8%A6%81%E6%93%8D%E4%BD%9C%E7%9A%84%E5%85%83%E7%B4%A0-set-get-removeAttribute-%E5%B1%9E%E6%80%A7%E5%90%8D-%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="nav-number">7.7.</span> <span class="nav-text">[curEle要操作的元素].set&#x2F;get&#x2F;removeAttribute(属性名,属性值)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#node-attributes%EF%BC%8C%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E8%8A%82%E7%82%B9%E7%9A%84%E5%B1%9E%E6%80%A7%E9%9B%86%E5%90%88"><span class="nav-number">7.8.</span> <span class="nav-text">node.attributes，获取指定节点的属性集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E4%B8%80%E4%B8%AAURL%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%97%AE%E5%8F%B7%E4%BC%A0%E5%8F%82%E5%92%8CHASH%E5%80%BC%E9%83%A8%E5%88%86%EF%BC%9Aa%E5%85%83%E7%B4%A0%E5%AF%B9%E8%B1%A1%E7%9A%84hash-search%E4%B8%A4%E4%B8%AA%E5%B1%9E%E6%80%A7%E5%88%86%E5%88%AB%E5%AD%98%E5%82%A8%E4%BA%86%E5%93%88%E5%B8%8C%E5%80%BC%E5%92%8C%E5%8F%82%E6%95%B0%E5%80%BC"><span class="nav-number">7.9.</span> <span class="nav-text">解析一个URL字符串问号传参和HASH值部分：a元素对象的hash&#x2F;search两个属性分别存储了哈希值和参数值</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yapei Li"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Yapei Li</p>
+  <div class="site-description" itemprop="description">专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yapeili" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yapeili" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:webyapeili@sina.com" title="E-Mail → mailto:webyapeili@sina.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yapei Li</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

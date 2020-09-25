@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SCSS 描述一个人1234567891011121314151617181920212223242526272829303132.human &amp;#123;  &#x2F;&#x2F; 为了少打点字，下面就简称 block: b | element: e | modifier: m  &amp;__finger &amp;#123;    &amp;--little &amp;#123;&amp;#125;  &amp;#125;  &#x2F;&#x2F; case">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SCSS+BEM">
+<meta property="og:url" content="http://yoursite.com/2020/05/11/SCSS+BEM/index.html">
+<meta property="og:site_name" content="Yapei Li">
+<meta property="og:description" content="SCSS 描述一个人1234567891011121314151617181920212223242526272829303132.human &amp;#123;  &#x2F;&#x2F; 为了少打点字，下面就简称 block: b | element: e | modifier: m  &amp;__finger &amp;#123;    &amp;--little &amp;#123;&amp;#125;  &amp;#125;  &#x2F;&#x2F; case">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/scsslist.jpeg">
+<meta property="article:published_time" content="2020-05-11T04:39:04.000Z">
+<meta property="article:modified_time" content="2020-05-11T04:39:04.000Z">
+<meta property="article:author" content="Yapei Li">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="CSS预编译">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/scsslist.jpeg">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/11/SCSS+BEM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>SCSS+BEM | Yapei Li</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yapei Li</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于前端领域</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yapeili" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/11/SCSS+BEM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SCSS+BEM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-11 12:39:04" itemprop="dateCreated datePublished" datetime="2020-05-11T12:39:04+08:00">2020-05-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="SCSS-描述一个人"><a href="#SCSS-描述一个人" class="headerlink" title="SCSS 描述一个人"></a>SCSS 描述一个人</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.human</span> &#123;</span><br><span class="line">  <span class="comment">// 为了少打点字，下面就简称 block: b | element: e | modifier: m</span></span><br><span class="line"></span><br><span class="line">  &amp;__finger &#123;</span><br><span class="line">    &amp;--little &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// case.1 [ b--m 中嵌套 b__e ]</span></span><br><span class="line">  &amp;--male &#123;</span><br><span class="line">    <span class="selector-class">.human__leg</span> &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// case.2 [ 伪类或者伪元素中嵌套 b__e ]</span></span><br><span class="line">  &amp;<span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="selector-class">.human__hand</span> &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// case.3 [ state 中嵌套 b__e ]</span></span><br><span class="line">  &amp;<span class="selector-class">.is-hurt</span> &#123;</span><br><span class="line">    <span class="selector-class">.human__head</span> &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// case.4 [ 任意情况下嵌套 +, ~ 等特殊的选择符 ]</span></span><br><span class="line">  &amp;__arm &#123;</span><br><span class="line">    &amp;<span class="selector-pseudo">:focus</span> &#123;</span><br><span class="line">      &amp; ~ <span class="selector-class">.human__hand--right</span> &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// case.5 [ 共享规则 ]</span></span><br><span class="line">  &amp;__teeth, &amp;__tongue &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面列举了几种原始画风下 <code>scss</code> 开发时经常会碰到几种不得不把 <code>.block__element--modifier</code> 写全的几种情况，也就是 本文 想解决的<code>BEM</code>开发比较痛的地方 —— 最痛的是还要加 <code>namespace</code>… </p>
+</blockquote>
+<h2 id="第一步：声明bem-mixins"><a href="#第一步：声明bem-mixins" class="headerlink" title="第一步：声明bem-mixins"></a>第一步：声明bem-mixins</h2><a id="more"></a>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义连接符</span></span><br><span class="line"><span class="variable">$element-separator</span>: <span class="string">&#x27;__&#x27;</span>;</span><br><span class="line"><span class="variable">$modifier-separator</span>: <span class="string">&#x27;--&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> b(<span class="variable">$block</span>) &#123;</span><br><span class="line">  .#&#123;<span class="variable">$block</span>&#125; &#123;</span><br><span class="line">    <span class="keyword">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> e(<span class="variable">$element</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;; <span class="comment">// &amp; 里面保存着上下文，在这个 mixin 中其实指的就是 block</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">@at-root</span> &#123; <span class="comment">// @at-root 指规则跳出嵌套，写在最外层</span></span><br><span class="line">    .#&#123;<span class="variable">$selector</span>+ <span class="variable">$element-separator</span> + <span class="variable">$element</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> m(<span class="variable">$modifier</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@at-root</span> &#123;</span><br><span class="line">    .#&#123;<span class="variable">$selector</span> + <span class="variable">$modifier-separator</span> + <span class="variable">$modifier</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样子我们就可以像下面的写法</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> e(finger) &#123;</span><br><span class="line">    <span class="keyword">@include</span> m(little) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="第二步：解决-case-1，b–m-内嵌-b-e"><a href="#第二步：解决-case-1，b–m-内嵌-b-e" class="headerlink" title="第二步：解决 case.1，b–m 内嵌 b__e"></a>第二步：解决 case.1，b–m 内嵌 b__e</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果用上面的 mixin 直接写 case1</span></span><br><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> m(male) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(leg) &#123;</span><br><span class="line">      <span class="comment">// 这里会直接输出 .human--male__leg 而不是 .human--male .human__leg</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>所以我们要做的就是判断当 <code>e</code> 在 <code>m</code> 内部的时候改变成<code>嵌套输出</code>而不是<code>直接拼接</code>，可以以<code>上下文中是否存在「--」</code>为依据来判断</p>
+</blockquote>
+<h3 id="将上下文转换成字符串并判断是否包含-也就是-modifier-separator"><a href="#将上下文转换成字符串并判断是否包含-也就是-modifier-separator" class="headerlink" title="将上下文转换成字符串并判断是否包含 -- 也就是 $modifier-separator"></a>将上下文转换成字符串并判断是否包含 <code>--</code> 也就是 <code>$modifier-separator</code></h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 转换成字符串 */</span></span><br><span class="line"><span class="keyword">@function</span> selectorToString(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: inspect(<span class="variable">$selector</span>);</span><br><span class="line">  <span class="variable">$selector</span>: str-slice(<span class="variable">$selector</span>, <span class="number">2</span>, -<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@return</span> <span class="variable">$selector</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 判断是否存在 modifier-separator */</span></span><br><span class="line"><span class="keyword">@function</span> containsModifier(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: selectorToString(<span class="variable">$selector</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> str-index(<span class="variable">$selector</span>, <span class="variable">$modifier-separator</span>) &#123;</span><br><span class="line">    <span class="keyword">@return</span> true;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="keyword">@return</span> false;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="改写-e"><a href="#改写-e" class="headerlink" title="改写 e"></a>改写 <code>e</code></h4><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@mixin</span> e(<span class="variable">$element</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> containsModifer(<span class="variable">$selector</span>) &#123;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selector</span>&#125; &#123;</span><br><span class="line">        <span class="comment">// 这里问题就来了，这里需要个 block 名我们该怎么获取呢？下面讨论</span></span><br><span class="line">        .#&#123;<span class="selector-attr">[block名]</span> + <span class="variable">$element-separator</span> + <span class="variable">$element</span>&#125; &#123;</span><br><span class="line">          <span class="keyword">@content</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="comment">// 原来的代码</span></span><br><span class="line">    <span class="keyword">@at-root</span> &#123; <span class="comment">// @at-root 指规则跳出嵌套，写在最外层</span></span><br><span class="line">        .#&#123;<span class="variable">$selector</span>+ <span class="variable">$element-separator</span> + <span class="variable">$element</span>&#125; &#123;</span><br><span class="line">            <span class="keyword">@content</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="block-名的获取"><a href="#block-名的获取" class="headerlink" title="block 名的获取"></a>block 名的获取</h4><p>block 名的获取可以想到两种办法:</p>
+<ol>
+<li>一种是根据上下文中的 .b–m 或者 .b__e–m 去进行字符串切割（通过 sass 的 str-index 和 str-slice 实现）</li>
+<li>第二种简单的办法，利用全局变量实现！<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单来说就是在一个 block 中将一个全局变量锁定，多个或者多文件编译不会冲突</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$B</span>: <span class="string">&#x27;&#x27;</span>; <span class="comment">// 存储当前 block 名</span></span><br><span class="line"><span class="variable">$E</span>: <span class="string">&#x27;&#x27;</span>; <span class="comment">// 也可以存储下 element 名</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> b(<span class="variable">$block</span>) &#123;</span><br><span class="line">  <span class="variable">$B</span>: <span class="variable">$block</span> !global; <span class="comment">// ***!global 将这个值覆盖到全局变量***</span></span><br><span class="line">  <span class="comment">// 原来的代码</span></span><br><span class="line">  .#&#123;<span class="variable">$B</span>&#125; &#123;</span><br><span class="line">    <span class="keyword">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 所以 e 里那句话就可以写成</span></span><br><span class="line"><span class="keyword">@mixin</span> e(<span class="variable">$element</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;;</span><br><span class="line">  <span class="variable">$E</span>: <span class="variable">$element</span> !global;</span><br><span class="line">  <span class="keyword">@if</span> containsModifer(<span class="variable">$selector</span>) &#123;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selector</span>&#125; &#123;</span><br><span class="line">        .#&#123;<span class="variable">$B</span> + <span class="variable">$element-separator</span> + <span class="variable">$element</span>&#125; &#123;</span><br><span class="line">          <span class="keyword">@content</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// case1 就可以这样写</span></span><br><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> m(male) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(leg) &#123;</span><br><span class="line">     <span class="comment">// 就会正确输出 .human--male .human__leg 了</span></span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="第三步：解决-case-2（伪类或者伪元素中嵌套-b-e）和-case-3（state-中嵌套-b-e）"><a href="#第三步：解决-case-2（伪类或者伪元素中嵌套-b-e）和-case-3（state-中嵌套-b-e）" class="headerlink" title="第三步：解决 case.2（伪类或者伪元素中嵌套 b__e）和 case.3（state 中嵌套 b__e）"></a>第三步：解决 case.2（伪类或者伪元素中嵌套 b__e）和 case.3（state 中嵌套 b__e）</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.human</span> &#123;</span><br><span class="line">  <span class="comment">// case.2 [ 伪类或者伪元素中嵌套 b__e ]</span></span><br><span class="line">  &amp;<span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">    <span class="selector-class">.human__hand</span> &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// case.3 [ state 中嵌套 b__e ]</span></span><br><span class="line">  &amp;<span class="selector-class">.is-hurt</span> &#123;</span><br><span class="line">    <span class="selector-class">.human__head</span> &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+跟 第二步 是一个道理，只不过判断的标志不同，判断是否存在「:」和 「is-」而已：<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先说下 state的前缀，这里用了「is-」，这是需要实现自己定好的，</span></span><br><span class="line"><span class="variable">$state-prefix</span>: <span class="string">&#x27;is-&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> when(<span class="variable">$state</span>) &#123;</span><br><span class="line">  <span class="keyword">@at-root</span> &#123;</span><br><span class="line">    #&#123;&amp;&#125;.#&#123;<span class="variable">$state-prefix</span> + <span class="variable">$state</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里***必须要注意***的是不能直接写 &amp;:hover 这样之类的了，</span></span><br><span class="line"><span class="comment">// 会有个恶心的表现就是 &amp;:hover 包装下的 &amp; 会进行重复拼接：</span></span><br><span class="line"><span class="comment">// @incude b(block) &#123;</span></span><br><span class="line"><span class="comment">//   &amp;:hover &#123;</span></span><br><span class="line"><span class="comment">//     @error &amp;;</span></span><br><span class="line"><span class="comment">//     // 这里打印的 &amp; 不会是想象的 .block:hover 而是 .block .block:hover</span></span><br><span class="line"><span class="comment">//     // 猜测是因为这算第二次去读取上下文，第一次会在 &amp;:hover 里，所以有出入</span></span><br><span class="line"><span class="comment">//   &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="comment">// 所以对伪pseudo 也进行了下包装，用 @at-root 来重置 &amp; 读取次数的计数</span></span><br><span class="line"><span class="keyword">@mixin</span> pseudo(<span class="variable">$pseudo</span>) &#123;</span><br><span class="line">  @at-root #&#123;&amp;&#125;#&#123;&#x27;:#&#123;$pseudo&#125;&#x27;&#125; &#123;</span><br><span class="line">    <span class="keyword">@content</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@function</span> containWhenFlag(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: selectorToString(<span class="variable">$selector</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> str-index(<span class="variable">$selector</span>, <span class="string">&#x27;.&#x27;</span> + <span class="variable">$state-prefix</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 根据结果返回 true/false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@function</span> containPseudoClass(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: selectorToString(<span class="variable">$selector</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> str-index(<span class="variable">$selector</span>, <span class="string">&#x27;:&#x27;</span>) &#123;</span><br><span class="line">    ... <span class="comment">// 根据结果返回 true/false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这时候写 case.2 和 case.3 就是这么的 easy 了</span></span><br><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> when(hurt) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(hand) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@include</span> pseudo(hover) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(head) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+第四步：case.4，任意情况下嵌套 +, ~ 等特殊的选择符<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="comment">// case.4 [ 任意情况下嵌套 +, ~ 等特殊的选择符的 bem 结 ]   </span></span><br><span class="line">  &amp;__arm &#123;</span><br><span class="line">    &amp;<span class="selector-pseudo">:focus</span> </span><br><span class="line">      &amp; + <span class="selector-class">.human__arm</span> &#123;</span><br><span class="line">         &amp;--<span class="attribute">left</span> &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">      &amp; ~ <span class="selector-class">.human__hand--right</span> &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+解决方法：<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个mixin 可以直接生成 .b__e 也可以生成 .b__e--m</span></span><br><span class="line"><span class="comment">// 参数的顺序设置成了 (选择符, element, modifier, block)</span></span><br><span class="line"><span class="comment">// 因为一般情况下 block 改动最小，有个默认值 $E 就够了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> spec-selector(<span class="variable">$specSelector</span>: <span class="string">&#x27;&#x27;</span>, <span class="variable">$element</span>: <span class="variable">$E</span>,<span class="variable">$modifier</span>: false, <span class="variable">$block</span>: <span class="variable">$B</span>) &#123;</span><br><span class="line">  <span class="comment">// 判断输出的是 b__e 还是 b__e--m</span></span><br><span class="line">  <span class="keyword">@if</span> <span class="variable">$modifier</span> &#123;</span><br><span class="line">    <span class="variable">$modifierCombo</span>: <span class="variable">$modifier-separator</span> + <span class="variable">$modifier</span>;</span><br><span class="line">  &#125;  </span><br><span class="line"></span><br><span class="line">  <span class="keyword">@at-root</span> &#123;</span><br><span class="line">    #&#123;&amp;&#125;#&#123;<span class="variable">$specSelector</span>&#125;.#&#123;<span class="variable">$block</span>+<span class="variable">$element-separator</span>+<span class="variable">$element</span>+<span class="variable">$modifierCombo</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//  然后写写看，bingoooooo</span><br><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> e(arm) &#123;</span><br><span class="line">    <span class="keyword">@include</span> pseudo(focus) &#123;</span><br><span class="line">      <span class="keyword">@include</span> spec-selector(<span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        <span class="comment">// .human__arm:focus + .human__arm</span></span><br><span class="line">        <span class="keyword">@include</span> m(left) &#123; <span class="comment">// .human__arm:focus + .human__arm--left &#125;</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">@include</span> spec-selector(<span class="string">&#x27;~&#x27;</span>, hand, right) &#123;</span><br><span class="line">        <span class="comment">// .human__arm:focus ~ .human__hand--right</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+第五步：case.5，共享规则<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.human</span> &#123;</span><br><span class="line">  <span class="comment">// case.5 [ 共享规则 ]</span></span><br><span class="line">  &amp;__teeth, &amp;__tongue &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这里其实比较有意思，在实际开发中一般遇到共享规则，大部分情况还会有对单个的定义</span></span><br><span class="line">  &amp;__teeth &#123;&#125;</span><br><span class="line">  &amp;__tongue &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这样子其实写得繁琐了，在 SASS 中可以创建个「共享规则」，</span></span><br><span class="line">  <span class="comment">// 然后用 @extend 进行继承最好，例如</span></span><br><span class="line">  <span class="comment">// 编译结果是一样的哦，@extend 会将有公共规则的选择器拎出来组成 a, b &#123;&#125; 的形式</span></span><br><span class="line">  %shared-rule &#123;&#125;</span><br><span class="line"></span><br><span class="line">  &amp;__teeth &#123;</span><br><span class="line">   <span class="keyword">@extend</span> %shared-rule;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &amp;__tongue &#123;</span><br><span class="line">   <span class="keyword">@extend</span> %shared-rule;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+解决方法：<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  %shared-rule &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> b(teeth) &#123; <span class="keyword">@extend</span> %shared-rule; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> b(tongue) &#123; <span class="keyword">@extend</span> %shared-rule;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这样子输出其实不会是想像的那样</span></span><br><span class="line"><span class="comment">// 期望的</span></span><br><span class="line"><span class="selector-class">.human__teeth</span>, <span class="selector-class">.human__tongue</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实际的...</span></span><br><span class="line"><span class="selector-class">.human</span> <span class="selector-class">.human__teeth</span>, <span class="selector-class">.human</span> <span class="selector-class">.human__tongue</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里是因为 %shared-rule 被定义在了 .human 内部 所以其实把上下文也是带进来的</span></span><br><span class="line"><span class="comment">// 要解决的话也很简单，用 @at-root 来做，定义下这样两个 mixin</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> share-rule(<span class="variable">$name</span>) &#123;</span><br><span class="line">  <span class="variable">$rule-name</span>: <span class="string">&#x27;%shared-&#x27;</span>+<span class="variable">$name</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@at-root</span> #&#123;<span class="variable">$rule-name</span>&#125; &#123;</span><br><span class="line">    <span class="keyword">@content</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> extend-rule(<span class="variable">$name</span>) &#123;</span><br><span class="line">  @extend #&#123;&#x27;%shared-&#x27;+$name&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 然后！</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> share-rule(skin) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> b(teeth) &#123; <span class="keyword">@include</span> extend-rule(skin); &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> b(tongue) &#123; <span class="keyword">@include</span> extend-rule(skin); &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ***注意：这里共享规则的名字不能重复，不然不会覆盖****</span></span><br><span class="line"><span class="comment">// ***注意：所以需要一个 list-map 来存储已有规则名，遇到重复时 @error 提示****</span></span><br><span class="line"><span class="comment">// ***注意：具体代码就不上了****</span></span><br></pre></td></tr></table></figure>
+<h2 id="最终实现效果"><a href="#最终实现效果" class="headerlink" title="最终实现效果"></a>最终实现效果</h2><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@include</span> b(human) &#123;</span><br><span class="line">  <span class="keyword">@include</span> e(finger) &#123;</span><br><span class="line">    <span class="keyword">@include</span> m(little) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> m(male) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(leg) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> pseudo(hover) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(hand) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> when(hurt) &#123;</span><br><span class="line">    <span class="keyword">@include</span> e(hand) &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> e(arm) &#123;</span><br><span class="line">    <span class="keyword">@include</span> pseudo(focus) &#123;</span><br><span class="line">      <span class="keyword">@include</span> spec-selector(<span class="string">&#x27;+&#x27;</span>) &#123;</span><br><span class="line">        <span class="keyword">@include</span> m(left) &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">@include</span> spec-selector(<span class="string">&#x27;~&#x27;</span>, hand, right) &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="文档结构"><a href="#文档结构" class="headerlink" title="文档结构"></a>文档结构</h3><img src="/img/scsslist.jpeg" alt="Alt text"><h3 id="config-scss"><a href="#config-scss" class="headerlink" title="_config.scss"></a>_config.scss</h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * SCSS 配置项：命名空间以及BEM</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="variable">$namespace</span>: <span class="string">&#x27;ab&#x27;</span>;</span><br><span class="line"><span class="variable">$elementSeparator</span>: <span class="string">&#x27;__&#x27;</span>;</span><br><span class="line"><span class="variable">$modifierSeparator</span>: <span class="string">&#x27;--&#x27;</span>;</span><br><span class="line"><span class="variable">$state-prefix</span>: <span class="string">&#x27;is-&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="function-scss"><a href="#function-scss" class="headerlink" title="_function.scss"></a>_function.scss</h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 辅助函数</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">@import</span> <span class="string">&#x27;config&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 转换成字符串 */</span></span><br><span class="line"><span class="keyword">@function</span> selectorToString(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: inspect(<span class="variable">$selector</span>);</span><br><span class="line">  <span class="variable">$selector</span>: str-slice(<span class="variable">$selector</span>, <span class="number">2</span>, -<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@return</span> <span class="variable">$selector</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 判断是否存在 Modifier */</span></span><br><span class="line"><span class="keyword">@function</span> containsModifier(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: selectorToString(<span class="variable">$selector</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> str-index(<span class="variable">$selector</span>, <span class="variable">$modifierSeparator</span>) &#123;</span><br><span class="line">    <span class="keyword">@return</span> true;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="keyword">@return</span> false;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 判断是否存在伪类 */</span></span><br><span class="line"><span class="keyword">@function</span> containsPseudo(<span class="variable">$selector</span>) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: selectorToString(<span class="variable">$selector</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> str-index(<span class="variable">$selector</span>, <span class="string">&#x27;:&#x27;</span>) &#123;</span><br><span class="line">    <span class="keyword">@return</span> true;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="keyword">@return</span> false;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mixin-scss"><a href="#mixin-scss" class="headerlink" title="_mixin.scss"></a>_mixin.scss</h3><figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 混合宏</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">@import</span> <span class="string">&#x27;config&#x27;</span>;</span><br><span class="line"><span class="keyword">@import</span> <span class="string">&#x27;function&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * BEM</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">@mixin</span> b(<span class="variable">$block</span>) &#123;</span><br><span class="line">  <span class="variable">$B</span>: <span class="variable">$namespace</span> + <span class="string">&#x27;-&#x27;</span> + <span class="variable">$block</span> !global;</span><br><span class="line"></span><br><span class="line">  .#&#123;<span class="variable">$B</span>&#125; &#123;</span><br><span class="line">    <span class="keyword">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 对于伪类，会自动将 e 嵌套在 伪类 底下 */</span></span><br><span class="line"><span class="keyword">@mixin</span> e(<span class="variable">$element</span>...) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;;</span><br><span class="line">  <span class="variable">$selectors</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> containsPseudo(<span class="variable">$selector</span>) &#123;</span><br><span class="line">    <span class="keyword">@each</span> <span class="variable">$item</span> in <span class="variable">$element</span> &#123;</span><br><span class="line">      <span class="variable">$selectors</span>: #&#123;<span class="variable">$selectors</span> + <span class="string">&#x27;.&#x27;</span> + <span class="variable">$B</span> + <span class="variable">$elementSeparator</span> + <span class="variable">$item</span> + <span class="string">&#x27;,&#x27;</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selector</span>&#125; &#123;</span><br><span class="line">        #&#123;<span class="variable">$selectors</span>&#125; &#123;</span><br><span class="line">          <span class="keyword">@content</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="keyword">@each</span> <span class="variable">$item</span> in <span class="variable">$element</span> &#123;</span><br><span class="line">      <span class="variable">$selectors</span>: #&#123;<span class="variable">$selectors</span> + <span class="variable">$selector</span> + <span class="variable">$elementSeparator</span> + <span class="variable">$item</span> + <span class="string">&#x27;,&#x27;</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selectors</span>&#125; &#123;</span><br><span class="line">        <span class="keyword">@content</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@mixin</span> m(<span class="variable">$modifier</span>...) &#123;</span><br><span class="line">  <span class="variable">$selectors</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">@each</span> <span class="variable">$item</span> in <span class="variable">$modifier</span> &#123;</span><br><span class="line">    <span class="variable">$selectors</span>: #&#123;<span class="variable">$selectors</span> + &amp; + <span class="variable">$modifierSeparator</span> + <span class="variable">$item</span> + <span class="string">&#x27;,&#x27;</span>&#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@at-root</span> &#123;</span><br><span class="line">    #&#123;<span class="variable">$selectors</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 对于需要需要嵌套在 m 底下的 e，调用这个混合宏，一般在切换整个组件的状态，如切换颜色的时候 */</span></span><br><span class="line"><span class="keyword">@mixin</span> me(<span class="variable">$element</span>...) &#123;</span><br><span class="line">  <span class="variable">$selector</span>: &amp;;</span><br><span class="line">  <span class="variable">$selectors</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@if</span> containsModifier(<span class="variable">$selector</span>) &#123;</span><br><span class="line">    <span class="keyword">@each</span> <span class="variable">$item</span> in <span class="variable">$element</span> &#123;</span><br><span class="line">      <span class="variable">$selectors</span>: #&#123;<span class="variable">$selectors</span> + <span class="string">&#x27;.&#x27;</span> + <span class="variable">$B</span> + <span class="variable">$elementSeparator</span> + <span class="variable">$item</span> + <span class="string">&#x27;,&#x27;</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selector</span>&#125; &#123;</span><br><span class="line">        #&#123;<span class="variable">$selectors</span>&#125; &#123;</span><br><span class="line">          <span class="keyword">@content</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">@else</span> &#123;</span><br><span class="line">    <span class="keyword">@each</span> <span class="variable">$item</span> in <span class="variable">$element</span> &#123;</span><br><span class="line">      <span class="variable">$selectors</span>: #&#123;<span class="variable">$selectors</span> + <span class="variable">$selector</span> + <span class="variable">$elementSeparator</span> + <span class="variable">$item</span> + <span class="string">&#x27;,&#x27;</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@at-root</span> &#123;</span><br><span class="line">      #&#123;<span class="variable">$selectors</span>&#125; &#123;</span><br><span class="line">        <span class="keyword">@content</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 状态 */</span></span><br><span class="line"><span class="keyword">@mixin</span> when(<span class="variable">$state</span>) &#123;</span><br><span class="line">  <span class="keyword">@at-root</span> &#123;</span><br><span class="line">    &amp;.#&#123;<span class="variable">$state-prefix</span> + <span class="variable">$state</span>&#125; &#123;</span><br><span class="line">      <span class="keyword">@content</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 常用混合宏</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 单行超出隐藏 */</span></span><br><span class="line"><span class="keyword">@mixin</span> lineEllipsis &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 多行超出隐藏 */</span></span><br><span class="line"><span class="keyword">@mixin</span> multiEllipsis(<span class="variable">$lineNumber</span>: <span class="number">3</span>) &#123;</span><br><span class="line">  <span class="attribute">display</span>: -webkit-box;</span><br><span class="line">  -webkit-box-orient: vertical;</span><br><span class="line">  -webkit-line-clamp: <span class="variable">$lineNumber</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 清除浮动 */</span></span><br><span class="line"><span class="keyword">@mixin</span> clearFloat &#123;</span><br><span class="line">  &amp;<span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">    <span class="attribute">visibility</span>: hidden;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 0.5px 边框 */</span></span><br><span class="line"><span class="keyword">@mixin</span> halfPixelBorder(<span class="variable">$direction</span>: <span class="string">&#x27;bottom&#x27;</span>, <span class="variable">$left</span>: <span class="number">0</span>) &#123;</span><br><span class="line">  &amp;<span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">    <span class="attribute">position</span>: absolute;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">1px</span>;</span><br><span class="line">    <span class="attribute">left</span>: <span class="variable">$left</span>;</span><br><span class="line">    <span class="keyword">@if</span> (<span class="variable">$direction</span> == <span class="string">&#x27;bottom&#x27;</span>) &#123;</span><br><span class="line">      <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@else</span> &#123;</span><br><span class="line">      <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="attribute">transform</span>: scaleY(<span class="number">0.5</span>);</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">$-color-border-light</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@mixin</span> buttonClear &#123;</span><br><span class="line">  <span class="attribute">outline</span>: none;</span><br><span class="line">  -webkit-appearance: none;</span><br><span class="line">  -webkit-tap-highlight-<span class="attribute">color</span>: transparent;</span><br><span class="line">  <span class="attribute">background</span>: transparent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="页面中使用"><a href="#页面中使用" class="headerlink" title="页面中使用"></a>页面中使用</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;ab-experi-desc__title&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@import</span> <span class="string">&#x27;../../../assets/css/abstracts/mixin&#x27;</span>;</span><br><span class="line"><span class="keyword">@include</span> b(experi-desc) &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">6px</span> <span class="number">0</span> <span class="number">200px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">50px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> e(title) &#123;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">left</span>: -<span class="number">4px</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="number">20px</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">18px</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>: <span class="number">600</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> e(table) &#123;</span><br><span class="line">    <span class="attribute">margin-top</span>: <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">margin-left</span>: <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">border</span>: solid <span class="number">1px</span> <span class="number">#e5e8ed</span>;</span><br><span class="line">    <span class="attribute">background-color</span>: <span class="number">#ffffff</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@include</span> m(no) &#123;</span><br><span class="line">      <span class="attribute">line-height</span>: <span class="number">60px</span>;</span><br><span class="line">      <span class="attribute">text-align</span>: center;</span><br><span class="line">      <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">      <span class="attribute">color</span>: <span class="number">#9ca7b6</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@include</span> e(tr) &#123;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">12px</span>;</span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#e5e8ed</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#f5f7f9</span>;</span><br><span class="line"></span><br><span class="line">    &gt;<span class="selector-tag">span</span>,<span class="selector-tag">img</span> &#123;</span><br><span class="line">      <span class="attribute">display</span>: inline-block;</span><br><span class="line">      <span class="attribute">width</span>: <span class="number">12.5%</span>;</span><br><span class="line">      <span class="attribute">color</span>: <span class="number">#657180</span>;</span><br><span class="line">      <span class="attribute">text-align</span>: center;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28650879">https://zhuanlan.zhihu.com/p/28650879</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+              <a href="/tags/CSS%E9%A2%84%E7%BC%96%E8%AF%91/" rel="tag"><i class="fa fa-tag"></i> CSS预编译</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/10/CSS-Grid%E7%BD%91%E6%A0%BC%E5%B8%83%E5%B1%80/" rel="prev" title="CSS Grid 网格布局">
+      <i class="fa fa-chevron-left"></i> CSS Grid 网格布局
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/06/01/Vuex%E4%BD%BF%E7%94%A8/" rel="next" title="Vuex使用">
+      Vuex使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SCSS-%E6%8F%8F%E8%BF%B0%E4%B8%80%E4%B8%AA%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">SCSS 描述一个人</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%A3%B0%E6%98%8Ebem-mixins"><span class="nav-number">2.</span> <span class="nav-text">第一步：声明bem-mixins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E8%A7%A3%E5%86%B3-case-1%EF%BC%8Cb%E2%80%93m-%E5%86%85%E5%B5%8C-b-e"><span class="nav-number">3.</span> <span class="nav-text">第二步：解决 case.1，b–m 内嵌 b__e</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86%E4%B8%8A%E4%B8%8B%E6%96%87%E8%BD%AC%E6%8D%A2%E6%88%90%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B9%B6%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%AB-%E4%B9%9F%E5%B0%B1%E6%98%AF-modifier-separator"><span class="nav-number">3.1.</span> <span class="nav-text">将上下文转换成字符串并判断是否包含 -- 也就是 $modifier-separator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E5%86%99-e"><span class="nav-number">3.1.1.</span> <span class="nav-text">改写 e</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#block-%E5%90%8D%E7%9A%84%E8%8E%B7%E5%8F%96"><span class="nav-number">3.1.2.</span> <span class="nav-text">block 名的获取</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%A7%A3%E5%86%B3-case-2%EF%BC%88%E4%BC%AA%E7%B1%BB%E6%88%96%E8%80%85%E4%BC%AA%E5%85%83%E7%B4%A0%E4%B8%AD%E5%B5%8C%E5%A5%97-b-e%EF%BC%89%E5%92%8C-case-3%EF%BC%88state-%E4%B8%AD%E5%B5%8C%E5%A5%97-b-e%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">第三步：解决 case.2（伪类或者伪元素中嵌套 b__e）和 case.3（state 中嵌套 b__e）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E5%AE%9E%E7%8E%B0%E6%95%88%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">最终实现效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">6.</span> <span class="nav-text">案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E7%BB%93%E6%9E%84"><span class="nav-number">6.1.</span> <span class="nav-text">文档结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config-scss"><span class="nav-number">6.2.</span> <span class="nav-text">_config.scss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function-scss"><span class="nav-number">6.3.</span> <span class="nav-text">_function.scss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mixin-scss"><span class="nav-number">6.4.</span> <span class="nav-text">_mixin.scss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="nav-number">6.5.</span> <span class="nav-text">页面中使用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yapei Li"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Yapei Li</p>
+  <div class="site-description" itemprop="description">专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yapeili" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yapeili" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:webyapeili@sina.com" title="E-Mail → mailto:webyapeili@sina.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yapei Li</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

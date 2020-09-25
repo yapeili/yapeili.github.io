@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="变量提升（预解析）： 在 当前作用域  中 js代码自上而下执行之前，浏览器首先会把带  ‘var’或者 ‘function’ 关键字的进行提前的‘声明或定义’。  声明（declare）：var num;在当前作用域声明 定义（defined）：num&#x3D;12;给声明的变量附一个值   页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升带v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="js高阶2、变量提升，作用域链,暂时性死区">
+<meta property="og:url" content="http://yoursite.com/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/index.html">
+<meta property="og:site_name" content="Yapei Li">
+<meta property="og:description" content="变量提升（预解析）： 在 当前作用域  中 js代码自上而下执行之前，浏览器首先会把带  ‘var’或者 ‘function’ 关键字的进行提前的‘声明或定义’。  声明（declare）：var num;在当前作用域声明 定义（defined）：num&#x3D;12;给声明的变量附一个值   页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升带v">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-05-19T13:39:04.000Z">
+<meta property="article:modified_time" content="2019-05-19T13:39:04.000Z">
+<meta property="article:author" content="Yapei Li">
+<meta property="article:tag" content="Javascript">
+<meta property="article:tag" content="JS高阶">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>js高阶2、变量提升，作用域链,暂时性死区 | Yapei Li</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yapei Li</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于前端领域</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yapeili" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          js高阶2、变量提升，作用域链,暂时性死区
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-05-19 21:39:04" itemprop="dateCreated datePublished" datetime="2019-05-19T21:39:04+08:00">2019-05-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Javascript%E9%AB%98%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">Javascript高阶</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="变量提升（预解析）："><a href="#变量提升（预解析）：" class="headerlink" title="变量提升（预解析）："></a>变量提升（预解析）：</h2><blockquote>
+<p>在 <strong><code>当前作用域</code></strong>  中 js代码自上而下执行之前，浏览器首先会把带  <code>‘var’或者 ‘function’</code> 关键字的进行<code>提前的‘声明或定义’</code>。</p>
+<blockquote>
+<p>声明（declare）：var num;在当前作用域声明</p>
+<p>定义（defined）：num=12;给声明的变量附一个值</p>
+</blockquote>
+</blockquote>
+<h3 id="页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升"><a href="#页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升" class="headerlink" title="页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升"></a><code>页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量</code>，当函数执行时才把函数内的私有作用域下的变量提升</h3><h3 id="带var关键字的只是提前声明一下-并没有赋值；"><a href="#带var关键字的只是提前声明一下-并没有赋值；" class="headerlink" title="带var关键字的只是提前声明一下 并没有赋值；"></a>带var关键字的只是提前声明一下 并没有赋值；</h3><h3 id="带function关键字的在变量提升阶段把声明和定义都完成了"><a href="#带function关键字的在变量提升阶段把声明和定义都完成了" class="headerlink" title="带function关键字的在变量提升阶段把声明和定义都完成了"></a>带function关键字的在变量提升阶段把声明和定义都完成了</h3><h3 id="js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时-声明和定义都做过了"><a href="#js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时-声明和定义都做过了" class="headerlink" title="js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时 声明和定义都做过了"></a>js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时 声明和定义都做过了</h3><a id="more"></a>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(num) <span class="comment">//=&gt; undefined  此时由于变量提升只是 var num；</span></span><br><span class="line"><span class="keyword">var</span> num=<span class="number">13</span>;      <span class="comment">//=&gt; num = 13  提升阶段已经声明了所以不再声明 只是赋值</span></span><br><span class="line"><span class="built_in">console</span>.log(num) <span class="comment">//=&gt; 13  此时代码执行了 已经赋值为13</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(fn)  <span class="comment">//=&gt; fn()&#123;</span></span><br><span class="line">                       <span class="comment">//console.log(a)</span></span><br><span class="line">                       <span class="comment">//var a=10;</span></span><br><span class="line">                       <span class="comment">//console.log(a)</span></span><br><span class="line">                    <span class="comment">//&#125;</span></span><br><span class="line">                    <span class="comment">//带function关键字的在变量提升阶段把声明和定义都完成了</span></span><br><span class="line"></span><br><span class="line">fn();   <span class="comment">//=&gt;只要下面有，放在前面执行也可以  原因就是变量提升导致的</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;      <span class="comment">//=&gt;遇到创建fn的代码直接跳过因为变量提升时 声明和定义都做过了</span></span><br><span class="line">        <span class="comment">//在私有作用域中的 私有变量  在函数执行时也进行变量提升</span></span><br><span class="line">    <span class="built_in">console</span>.log(a)  <span class="comment">//=&gt; undefined 原因是 声明了 未定义</span></span><br><span class="line">    <span class="keyword">var</span> a=<span class="number">10</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a)  <span class="comment">//=&gt; 10</span></span><br><span class="line">&#125;</span><br><span class="line">fn()</span><br></pre></td></tr></table></figure>
+
+<h3 id="声明过的变量不再重复声明，遇到再次声明直接跳过"><a href="#声明过的变量不再重复声明，遇到再次声明直接跳过" class="headerlink" title="声明过的变量不再重复声明，遇到再次声明直接跳过"></a>声明过的变量不再重复声明，遇到再次声明直接跳过</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//=&gt;1.全局下的变量提升：var x;var y; var z; fn=aaafff111;</span></span><br><span class="line">    <span class="keyword">var</span> x=<span class="number">10</span>,</span><br><span class="line">        y=<span class="number">20</span>,</span><br><span class="line">        z=<span class="number">30</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params">x,y</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//=&gt;私有作用域</span></span><br><span class="line">        <span class="comment">//=&gt;3.形参赋值 x=10 y=20 （x/y都是私有变量）在函数内所有的xy都是私有变量</span></span><br><span class="line">        <span class="comment">//变量提升： 按理说应该var x 应该重新变量提升，但是形参x已经存在，所以忽略var x,x是10而不是undefined</span></span><br><span class="line">        <span class="built_in">console</span>.log(x,y,z)      <span class="comment">//=&gt;  10 （私有的x） 20（私有的y） 30  (z是全局变量)</span></span><br><span class="line">        <span class="keyword">var</span> x=<span class="number">100</span>;<span class="comment">//私有的x=100,不再var</span></span><br><span class="line">        y=<span class="number">200</span>;<span class="comment">//私有的y=200</span></span><br><span class="line">        z=<span class="number">300</span>;<span class="comment">//全局的z=300</span></span><br><span class="line">        <span class="built_in">console</span>.log(x,y,z)  <span class="comment">//100 200 300</span></span><br><span class="line">    &#125;</span><br><span class="line">    fn(x,y,z)  <span class="comment">//=&gt;2.fn执行传递的是实参（实参都是值）fn(10,20,30)</span></span><br><span class="line">    <span class="built_in">console</span>.log(x,y,z)  <span class="comment">//10 20 300</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="变量提升特殊情况"><a href="#变量提升特殊情况" class="headerlink" title="变量提升特殊情况"></a>变量提升特殊情况</h3><h4 id="1-全局作用域下定义变量时带var-和不带var的区别"><a href="#1-全局作用域下定义变量时带var-和不带var的区别" class="headerlink" title="1.全局作用域下定义变量时带var 和不带var的区别"></a>1.全局作用域下定义变量时带var 和不带var的区别</h4><blockquote>
+<p>(1)如果当前是全局作用域，带var的<code>声明了一个变量</code>，<code>同时也给window全局作用域加了一个属性</code></p>
+<p>(2)在全局作用域如果不带var<code>只是给window加了一个属性</code>，只不过在使用时把<code>window.</code>省略了（严格意义上不是一个变量）</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//带var</span></span><br><span class="line"><span class="built_in">console</span>.log(a)  <span class="comment">//=&gt; undefined</span></span><br><span class="line"><span class="keyword">var</span> a=<span class="number">10</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a)  <span class="comment">//=&gt;10</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a)   <span class="comment">//=&gt;10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//不带var</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//=&gt;报错  a is not defined</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a) <span class="comment">//=&gt;undefined</span></span><br><span class="line">a=<span class="number">12</span>;    <span class="comment">//其实是  window.a=12</span></span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//=&gt;12</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a) <span class="comment">//=&gt;12</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-私有作用域下定义变量时带var-和不带var的区别"><a href="#2-私有作用域下定义变量时带var-和不带var的区别" class="headerlink" title="2. 私有作用域下定义变量时带var 和不带var的区别"></a>2. 私有作用域下定义变量时带var 和不带var的区别</h4><ul>
+<li>(1)在私有作用域里，<code>带var的重新开始变量提升</code>，声明为私有变量，和外界没有任何关系</li>
+<li>(2)<code>不带var不是私有变量</code>，会向他的上级作用域查找，看是否是上级的变量，是的话，操作的就是上级作用域的变量，</li>
+<li>(3)不是上级的变量，向上继续查找，一直找到window为止（我们把这种查找机制叫做：<code>“作用域链”</code>），window有，操作的是window的变量（属性）</li>
+<li>(4)<code>window没有，如果带等号就是给window添加一个属性</code>，如果不带等号，是undefined，也就是<code>不带var</code>我们<code>在私有作用域中操作的一直是别人的</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//带var</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a); <span class="comment">//=&gt;undefined</span></span><br><span class="line">    <span class="keyword">var</span> a=<span class="number">12</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a); <span class="comment">//=&gt;12</span></span><br><span class="line">&#125;</span><br><span class="line">fn();</span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//a is not defined  闭包机制（私有作用域保护里边的私有变量不受外界的干扰）</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//不带var</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a); <span class="comment">//=&gt; a is not defined</span></span><br><span class="line">    a=<span class="number">12</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a); <span class="comment">//=&gt;12 其实找到的是 window.a</span></span><br><span class="line">&#125;</span><br><span class="line">fn();</span><br><span class="line"><span class="built_in">console</span>.log(a) <span class="comment">//=&gt;12  其实找到的是 window.a</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><blockquote>
+<p>函数执行形成一个私有作用域（保护变量），<code>进入私有作用域中，首先变量提升</code>（声明的变量是私有的），接下来才是代码执行</p>
+</blockquote>
+<h3 id="1、-执行的时候遇到一个变量，如果这个变量是私有的，那么按照私有变量处理即可"><a href="#1、-执行的时候遇到一个变量，如果这个变量是私有的，那么按照私有变量处理即可" class="headerlink" title="1、 执行的时候遇到一个变量，如果这个变量是私有的，那么按照私有变量处理即可"></a>1、 执行的时候遇到一个变量，如果这个变量是私有的，那么按照私有变量处理即可</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);     <span class="comment">//=&gt;undefined</span></span><br><span class="line">    <span class="keyword">var</span> a=<span class="number">12</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a);     <span class="comment">//=&gt;12</span></span><br><span class="line">&#125;</span><br><span class="line">fn();</span><br><span class="line"><span class="built_in">console</span>.log(a)  <span class="comment">//=&gt; a is not defined  //闭包机制（私有作用域保护里边的私有变量不受外界的干扰）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、-如果当前这个变量不是私有的，需要向它的上级作用域进行查找，上级如果没有，则继续向上查找，一直找到window全局作用域为止，我们把这种查找机制叫做-作用域链"><a href="#2、-如果当前这个变量不是私有的，需要向它的上级作用域进行查找，上级如果没有，则继续向上查找，一直找到window全局作用域为止，我们把这种查找机制叫做-作用域链" class="headerlink" title="2、 如果当前这个变量不是私有的，需要向它的上级作用域进行查找，上级如果没有，则继续向上查找，一直找到window全局作用域为止，我们把这种查找机制叫做 作用域链"></a>2、 如果当前这个变量不是私有的，需要向它的上级作用域进行查找，上级如果没有，则继续向上查找，一直找到window全局作用域为止，我们把这种查找机制叫做 <strong><code>作用域链</code></strong></h3><h4 id="1-如果上级作用域有，我们当前操作的都是上级作用域中的变量（如果我们在当前作用域把值改了，相当于把上级作用域中的这个值给修改了）"><a href="#1-如果上级作用域有，我们当前操作的都是上级作用域中的变量（如果我们在当前作用域把值改了，相当于把上级作用域中的这个值给修改了）" class="headerlink" title="1)如果上级作用域有，我们当前操作的都是上级作用域中的变量（如果我们在当前作用域把值改了，相当于把上级作用域中的这个值给修改了）"></a>1)如果上级作用域有，我们当前操作的都是上级作用域中的变量（如果我们在当前作用域把值改了，相当于把上级作用域中的这个值给修改了）</h4><h4 id="2-如果找到window也没有这个变量；变量-值：相当于给window设置了一个属性-以后再操作window下就有了；但是在赋值操作之前alert-变量-：想要输出这个变量，此时是没有的，所以会报错"><a href="#2-如果找到window也没有这个变量；变量-值：相当于给window设置了一个属性-以后再操作window下就有了；但是在赋值操作之前alert-变量-：想要输出这个变量，此时是没有的，所以会报错" class="headerlink" title="2)如果找到window也没有这个变量；变量=值：相当于给window设置了一个属性 以后再操作window下就有了；但是在赋值操作之前alert(变量)：想要输出这个变量，此时是没有的，所以会报错"></a>2)如果找到window也没有这个变量；变量=值：<code>相当于给window设置了一个属性 </code>以后再操作window下就有了；<code>但是在赋值操作之前alert(变量)：想要输出这个变量，此时是没有的，所以会报错</code></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a);    <span class="comment">//=&gt; a is not defined</span></span><br><span class="line">    a=<span class="number">12</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a);    <span class="comment">//=&gt;12 其实找到的是 window.a</span></span><br><span class="line">&#125;</span><br><span class="line">fn();</span><br><span class="line"><span class="built_in">console</span>.log(a)         <span class="comment">//=&gt;12  其实找到的是 window.a</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//变量提升 var a;var b; fn=AAAFFF111</span></span><br><span class="line"><span class="built_in">console</span>.log(x,y)    <span class="comment">//=&gt; undefined  undefined</span></span><br><span class="line"><span class="keyword">var</span> x=<span class="number">10</span>,y=<span class="number">20</span>;      <span class="comment">//=&gt;  x=10,y=20</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//私有作用域变量提升 var x;(x私有变量)</span></span><br><span class="line">    <span class="built_in">console</span>.log(x,y)   <span class="comment">//=&gt;  undefined 20</span></span><br><span class="line">    <span class="keyword">var</span> x=y=<span class="number">100</span>;     <span class="comment">//相当于 var x=100 （私有）; y=100（全局）</span></span><br><span class="line">    <span class="built_in">console</span>.log(x,y)  <span class="comment">//=&gt;  100 100</span></span><br><span class="line">&#125;</span><br><span class="line">fn()</span><br><span class="line"><span class="built_in">console</span>.log(x,y)  <span class="comment">//=&gt; 10 （全局） 100（全局）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="只对等号左边的进行变量提升"><a href="#只对等号左边的进行变量提升" class="headerlink" title="只对等号左边的进行变量提升"></a><code>只对等号左边的进行变量提升</code></h2><blockquote>
+<p>=: 赋值，左边为变量，<code>右边永远是值</code>(<code>右边不管是啥都要先计算出值</code>再赋值给左边)</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//之前：</span></span><br><span class="line">i%<span class="number">2</span>===<span class="number">0</span>?item.className=<span class="string">&#x27;c1&#x27;</span>:item.className=<span class="string">&#x27;c2&#x27;</span></span><br><span class="line"><span class="comment">//现在</span></span><br><span class="line">item.className = i%<span class="number">2</span>===<span class="number">0</span>?<span class="string">&#x27;c1&#x27;</span>:<span class="string">&#x27;c2&#x27;</span></span><br><span class="line"><span class="comment">//先把等号右边的三元运算符计算为值再赋值给等号左边</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>匿名函数：函数表达式（<code>把函数当做一个值赋值给变量或者其他内容</code> 比如事件）</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">oDiv.onclick=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="comment">//等价于oDiv.onclick等于AAAFFF111  这样的一个函数空间地址（堆内存地址）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="只对等号左边进行变量提升，右边是值不会提前声明（就算是函数也不会变量提升）"><a href="#只对等号左边进行变量提升，右边是值不会提前声明（就算是函数也不会变量提升）" class="headerlink" title="只对等号左边进行变量提升，右边是值不会提前声明（就算是函数也不会变量提升）"></a><code>只对等号左边进行变量提升，右边是值不会提前声明（就算是函数也不会变量提升）</code></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(fn)  =&gt; <span class="literal">undefined</span> 变量提升  <span class="keyword">var</span> fn；=右边是值不进行变量提升</span><br><span class="line"><span class="keyword">var</span> fn=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line"><span class="built_in">console</span>.log(fn) =&gt; 函数本身</span><br></pre></td></tr></table></figure>
+<h3 id="声明函数-最好用函数表达式的方式-var-fn-function"><a href="#声明函数-最好用函数表达式的方式-var-fn-function" class="headerlink" title="声明函数  最好用函数表达式的方式 var fn=function(){}"></a>声明函数  最好用<code>函数表达式</code>的方式 var fn=function(){}</h3><blockquote>
+<ol>
+<li><p>因为只能对等号左边的进行变量提升，所以变量提升完成后，当前函数只是声明了，没有定义，要想执行<code>只能放在赋值的代码之后执行</code>（放在前面执行相当于让undefined执行，会报错的）</p>
+</li>
+<li><p>这样让我们的<code>代码逻辑更加的严谨</code>，以后想知道一个执行的函数做了什么功能只需要向上查找定义的部分即可</p>
+</li>
+</ol>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sum();    <span class="comment">//=&gt; 因为 sum 是undefined  会报错 sum is not a function</span></span><br><span class="line"><span class="keyword">var</span> sum=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">sum();     <span class="comment">//=&gt;不报错</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fn=<span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params"></span>)</span>&#123;    <span class="comment">//==&gt;不要用这种命名</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line">sum();     <span class="comment">//=&gt;报错</span></span><br><span class="line">fn();      <span class="comment">//=&gt;  1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> fn=<span class="function"><span class="keyword">function</span> <span class="title">sum</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(sum)  <span class="comment">//=&gt; 函数本身</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line">fn();  <span class="comment">// =&gt;  1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="不管条件是否成立都要进行预解析"><a href="#不管条件是否成立都要进行预解析" class="headerlink" title="不管条件是否成立都要进行预解析"></a>不管条件是否成立都要进行预解析</h2><h3 id="不管条件是否成立，判断体中出现的var-function都会进行变量提升"><a href="#不管条件是否成立，判断体中出现的var-function都会进行变量提升" class="headerlink" title="不管条件是否成立，判断体中出现的var/function都会进行变量提升"></a>不管条件是否成立，判断体中出现的var/function都会进行变量提升</h3><h4 id="在新版浏览器中，function声明的变量只声明不能定义（前提：函数必须在判断体中）"><a href="#在新版浏览器中，function声明的变量只声明不能定义（前提：函数必须在判断体中）" class="headerlink" title="在新版浏览器中，function声明的变量只声明不能定义（前提：函数必须在判断体中）"></a>在<code>新版浏览器</code>中，<code>function</code>声明的变量<code>只声明不能定义</code>（前提：函数必须在判断体中）</h4><h4 id="老版本浏览器低版本ie-不管条件成不成立-function变量提升并定义"><a href="#老版本浏览器低版本ie-不管条件成不成立-function变量提升并定义" class="headerlink" title="老版本浏览器低版本ie 不管条件成不成立 function变量提升并定义"></a><code>老版本浏览器</code>低版本ie 不管条件成不成立<code> function变量提升并定义</code></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//新版浏览器</span></span><br><span class="line">   <span class="built_in">console</span>.log(num)    =&gt;  <span class="literal">undefined</span></span><br><span class="line">   <span class="built_in">console</span>.log(fn)     =&gt;  <span class="literal">undefined</span></span><br><span class="line">   <span class="keyword">if</span>(<span class="number">1</span> === <span class="number">1</span>)&#123;   <span class="comment">//或者if(1 != 1) 都对变量提升没有任何影响</span></span><br><span class="line">       <span class="keyword">var</span> num = <span class="number">12</span>;</span><br><span class="line">       <span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码执行到条件判断地方"><a href="#代码执行到条件判断地方" class="headerlink" title="代码执行到条件判断地方"></a>代码执行到条件判断地方</h3><h4 id="1-【条件不成立时】-进入不到判断体中，赋值的代码不执行，此时依然是undefined"><a href="#1-【条件不成立时】-进入不到判断体中，赋值的代码不执行，此时依然是undefined" class="headerlink" title="1. 【条件不成立时】 进入不到判断体中，赋值的代码不执行，此时依然是undefined"></a>1. 【<code>条件不成立时</code>】 进入不到判断体中，<code>赋值的代码不执行</code>，此时<code>依然是undefined</code></h4><h4 id="2-【条件成立时】-进入判断体中的第一件事不是代码执行，而是把之前变量提升没有定义的函数首先定义了（进入判断体中函数就定义了，为了迎合es6的块级作用域）"><a href="#2-【条件成立时】-进入判断体中的第一件事不是代码执行，而是把之前变量提升没有定义的函数首先定义了（进入判断体中函数就定义了，为了迎合es6的块级作用域）" class="headerlink" title="2. 【条件成立时】 进入判断体中的第一件事不是代码执行，而是把之前变量提升没有定义的函数首先定义了（进入判断体中函数就定义了，为了迎合es6的块级作用域）"></a>2. 【<code>条件成立时</code>】 进入判断体中的<code>第一件事不是代码执行</code>，而是<code>把之前变量提升没有定义的函数首先定义了</code>（<code>进入判断体中函数就定义了</code>，为了迎合es6的块级作用域）</h4><h4 id="3-老版本浏览器低版本ie-不管条件成不成立-function变量提升并定义"><a href="#3-老版本浏览器低版本ie-不管条件成不成立-function变量提升并定义" class="headerlink" title="3. 老版本浏览器低版本ie 不管条件成不成立 function变量提升并定义"></a>3. 老版本浏览器低版本ie 不管条件成不成立 function变量提升并定义</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//类似于es6的块级作用域</span></span><br><span class="line"><span class="built_in">console</span>.log(num)    =&gt;  <span class="literal">undefined</span></span><br><span class="line"><span class="built_in">console</span>.log(fn)     =&gt;  <span class="literal">undefined</span></span><br><span class="line"><span class="keyword">if</span>(<span class="number">1</span> === <span class="number">1</span>)&#123;   <span class="comment">//或者if(1 != 1) 都对变量提升没有任何影响</span></span><br><span class="line">    <span class="built_in">console</span>.log(num)    =&gt;  <span class="literal">undefined</span></span><br><span class="line">    <span class="built_in">console</span>.log(fn)     =&gt;  函数本身</span><br><span class="line">    <span class="keyword">var</span> num = <span class="number">12</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">     <span class="built_in">console</span>.log(num)    =&gt;  <span class="number">12</span></span><br><span class="line">     <span class="built_in">console</span>.log(fn)     =&gt;  函数本身</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(fn)   =&gt; <span class="literal">undefined</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">1</span>;i++)&#123;   <span class="comment">//i&lt;1 也是条件</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//=&gt;变量提升：没有</span></span><br><span class="line"></span><br><span class="line">f= <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123; <span class="keyword">return</span> <span class="literal">true</span>;&#125;;</span><br><span class="line">g= <span class="function"><span class="keyword">function</span> (<span class="params"></span>)</span>&#123; <span class="keyword">return</span> <span class="literal">false</span>;&#125;;</span><br><span class="line">~<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//=&gt;私有作用域</span></span><br><span class="line">    <span class="comment">//=&gt; 变量提升：新版本浏览器 g=undefined (不管条件是否成立都要进行变量提升，但是新版本浏览器只对函数进行声明，不定义)</span></span><br><span class="line">    <span class="keyword">if</span>(g() &amp;&amp; [] == ![])&#123;   <span class="comment">//在新版本浏览器中 直接报错</span></span><br><span class="line">                            <span class="comment">//旧版本浏览器g()true</span></span><br><span class="line">                            <span class="comment">//![]   ！符号转化为了boolean</span></span><br><span class="line">                            <span class="comment">// [] == false</span></span><br><span class="line">                            <span class="comment">// == 操作符 不同类型先转数字 再比较</span></span><br><span class="line">                            <span class="comment">// 0 == 0</span></span><br><span class="line">                            <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">                            <span class="comment">//typeof []  //Object</span></span><br><span class="line">                <span class="comment">//typeof ![] //Boolean</span></span><br><span class="line">        f = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123; <span class="keyword">return</span> <span class="literal">false</span>&#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">g</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;()</span><br><span class="line"><span class="built_in">console</span>.log(f())  =&gt; 新版本 前边就报错； 旧版本<span class="literal">false</span></span><br><span class="line"><span class="built_in">console</span>.log(g())  =&gt; 新版本 前边就报错； 旧版本<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<h2 id="变量提升重名的处理"><a href="#变量提升重名的处理" class="headerlink" title="变量提升重名的处理"></a>变量提升重名的处理</h2><h3 id="在变量提升阶段，如果名字重复了，不会重新的进行声明，但是会重新进行定义（后面赋的值把前边赋的值给替换掉）"><a href="#在变量提升阶段，如果名字重复了，不会重新的进行声明，但是会重新进行定义（后面赋的值把前边赋的值给替换掉）" class="headerlink" title="在变量提升阶段，如果名字重复了，不会重新的进行声明，但是会重新进行定义（后面赋的值把前边赋的值给替换掉）"></a>在变量提升阶段，如果<code>名字重复了，不会重新的进行声明</code>，但是<code>会重新进行定义</code>（后面赋的值把前边赋的值给替换掉）</h3><h3 id="函数变量提升并定义后，代码至上而下执行，遇到声明定义函数的代码时不再声明和定义"><a href="#函数变量提升并定义后，代码至上而下执行，遇到声明定义函数的代码时不再声明和定义" class="headerlink" title="函数变量提升并定义后，代码至上而下执行，遇到声明定义函数的代码时不再声明和定义"></a>函数变量提升并定义后，代码至上而下执行，遇到声明定义函数的代码时不再声明和定义</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//=&gt;变量提升：</span></span><br><span class="line">    <span class="number">1</span>、<span class="keyword">var</span> fn=aaafff111</span><br><span class="line">    <span class="number">2</span>、fn=aaafff222</span><br><span class="line">    <span class="number">3</span>、不进行任何操作</span><br><span class="line">    <span class="number">4</span>、fn=aaafff333</span><br><span class="line">    <span class="number">5</span>、fn=aaafff444</span><br><span class="line"><span class="comment">// =&gt;代码执行</span></span><br><span class="line">fn()        =&gt;  <span class="number">4</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123; <span class="built_in">console</span>.log(<span class="number">1</span>)&#125;    <span class="comment">//忽略</span></span><br><span class="line">fn()        =&gt;  <span class="number">4</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123; <span class="built_in">console</span>.log(<span class="number">2</span>)&#125;    <span class="comment">//忽略</span></span><br><span class="line">fn()        =&gt;  <span class="number">4</span></span><br><span class="line"><span class="keyword">var</span> fn=<span class="number">13</span>;  =&gt;  fn=<span class="number">13</span>    <span class="comment">//赋值</span></span><br><span class="line">fn()        =&gt;  报错 fn is not a <span class="function"><span class="keyword">function</span>  不再向下执行</span></span><br><span class="line"><span class="function"><span class="title">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123; <span class="built_in">console</span>.log(<span class="number">3</span>)&#125;</span><br><span class="line">fn()</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span>(<span class="params"></span>)</span>&#123; <span class="built_in">console</span>.log(<span class="number">4</span>)&#125;</span><br><span class="line">fn()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>var 变量提升 之所以为 undefined <code>不是因为赋值为了undefined</code>而是<code>因为不进行赋值操作才是undefined</code></p>
+<p>只声明不赋值默认值为undefined</p>
+<p><code>只有在全局作用域中</code>我们声明一个变量，相当于给全局对象window增加了一个属性名</p>
+</blockquote>
+<h2 id="ES6中的let不存在变量提升"><a href="#ES6中的let不存在变量提升" class="headerlink" title="ES6中的let不存在变量提升"></a>ES6中的let不存在变量提升</h2><h3 id="在当前作用域代码自上而下执行之前，浏览器会做一个重复性检测-语法检测"><a href="#在当前作用域代码自上而下执行之前，浏览器会做一个重复性检测-语法检测" class="headerlink" title="在当前作用域代码自上而下执行之前，浏览器会做一个重复性检测(语法检测)"></a>在<code>当前作用域代码自上而下执行之前，浏览器会做一个重复性检测(语法检测)</code></h3><h3 id="在ES6中基于LET-CONST等方式创建的变量或者函数，不存在变量提升机制：切断了全局变量和WINDOW属性的映射机制"><a href="#在ES6中基于LET-CONST等方式创建的变量或者函数，不存在变量提升机制：切断了全局变量和WINDOW属性的映射机制" class="headerlink" title="在ES6中基于LET/CONST等方式创建的变量或者函数，不存在变量提升机制：切断了全局变量和WINDOW属性的映射机制"></a>在ES6中基于<code>LET/CONST等方式创建的变量或者函数，不存在变量提升机制</code>：<code>切断了全局变量和WINDOW属性的映射机制</code></h3><blockquote>
+<p><code>在相同的作用域中，基于let不能声明相同名字的变量(不管用什么方式在当前作用域下声明了变量，再次使用let创建都会报错</code>（不同作用域下可以重复互不影响）</p>
+</blockquote>
+<h3 id="ES6同样具有作用域链"><a href="#ES6同样具有作用域链" class="headerlink" title="ES6同样具有作用域链"></a><code>ES6同样具有作用域链</code></h3><blockquote>
+<p>虽然没有变量提升机制，但是在<code>当前作用域代码自上而下执行之前，浏览器会做一个重复性检测(语法检测)</code>：自上而下查找当前作用域下所用所有变量，一旦发现有重复的，直接抛出异常，代码也不会再执行了</p>
+<p>（虽然没有把变量提前声明定义，但是浏览器已经记住了当前作用域下有哪些let创建的变量，<code>在let之前使用就会报错</code>，<code>在let之前进行=赋值也报错</code>）</p>
+<p>检测语法规范，看一下是否是基于新语创建的变量，如果是按照新语法规范来解析</p>
+<p><code>下边有let声明的这个变量，那么在let代码之前 赋值和获取都是报错</code></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//console.log(a)  报错</span></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">12</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a)   <span class="literal">undefined</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">12</span>;</span><br><span class="line"><span class="keyword">var</span> a=<span class="number">13</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a)  <span class="comment">//=&gt;13</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">12</span>;</span><br><span class="line"><span class="keyword">let</span> a=<span class="number">13</span>;  <span class="comment">//报错    在相同的作用域中，基于let不能声明相同名字的变量</span></span><br><span class="line"><span class="built_in">console</span>.log(a)    <span class="comment">//不执行</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">12</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a)  <span class="comment">//报错  在代码执行前就已经验证变量是否重名</span></span><br><span class="line"><span class="keyword">let</span> a=<span class="number">13</span>;  </span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a=<span class="number">12</span>;<span class="comment">//报错  虽然没有把变量提前声明定义，但是浏览器已经记住了当前作用域下有哪些用let创建的变量在let a之前使用就会报错  a is not defined</span></span><br><span class="line"><span class="built_in">console</span>.log(a)  </span><br><span class="line"><span class="keyword">let</span> a=<span class="number">13</span>;  </span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">b=<span class="number">12</span>;</span><br><span class="line"><span class="built_in">console</span>.log(b)  <span class="comment">//12</span></span><br><span class="line">a=<span class="number">13</span><span class="comment">//报错  虽然没有把变量提前声明定义，但是浏览器已经记住了当前作用域下有哪些用let创建的变量在let a之前使用就会报错  a is not defined</span></span><br><span class="line"><span class="built_in">console</span>.log(a)  </span><br><span class="line"><span class="keyword">let</span> a=<span class="number">14</span>;  </span><br><span class="line"><span class="built_in">console</span>.log(a)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a=<span class="number">10</span>;</span><br><span class="line"><span class="keyword">let</span> b=<span class="number">10</span>;</span><br><span class="line"><span class="keyword">let</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//console.log(a)    //=&gt;直接报错 虽然没有把变量提前声明定义，但是浏览器已经记住了当前作用域下有哪些用let创建的变量在let a之前使用就会报错  a is not defined (不会去找上级的变量a)</span></span><br><span class="line">    <span class="comment">//a是私有作用域下的变量</span></span><br><span class="line">    <span class="comment">////console.log(b)  //全局10</span></span><br><span class="line">    <span class="keyword">let</span> a=b=<span class="number">20</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(a,b)    <span class="comment">//=&gt;(把第一个console.log去掉后)  20私有 20全局</span></span><br><span class="line">&#125;</span><br><span class="line">fn()</span><br><span class="line"><span class="built_in">console</span>.log(a,b)        <span class="comment">//=&gt;(把第一个console.log去掉后) 10全局  20全局 </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="JS中的暂时性死区"><a href="#JS中的暂时性死区" class="headerlink" title="JS中的暂时性死区"></a>JS中的暂时性死区</h2><blockquote>
+<p>在代码块内，<code>使用let命令声明变量之前</code>，<code>该变量都是不可用的</code>。这在语法上，称为“<code>暂时性死区</code>”（temporal dead zone，简称 TDZ）</p>
+<p>ES6明确规定，如果<code>区块中</code>存在<code>let</code>和<code>const</code>命令，这个区块对这些命令声明的<code>变量</code>，从一开始就<code>形成了封闭作用域</code>。</p>
+<p>凡是在<code>声明之前</code>就<code>使用</code>这些变量，就会<code>报错</code>。</p>
+<p>在原有浏览器渲染机制下（es5），<code>基于typeof等逻辑运算符检测一个未被声明过的变量，不会报错，返回&#39;undefined&#39;</code>；</p>
+<p>如果当前变量是基于ES6语法处理，如果在<code>没有声明（let之前）之前使用typeof检测会直接报错</code>；</p>
+<p>基于let创建变量，会把大部分<code>&#123;&#125;</code>当做一个<code>私有的块级作用域</code>（类似于函数的私有作用域），在这里也是重新检测语法规范，看一下是否是基于新语创建的变量，如果是按照新语法规范来解析</p>
+<p><code>ES6</code>中<code>if</code>后面的<code>&#123;&#125;</code>形成<code>块级私有作用域</code></p>
+<p><code>上级块级作用域不是上级作用域（上级作用域只能由函数执行形成）</code></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">12</span>;</span><br><span class="line"><span class="keyword">if</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(a)  <span class="comment">//报错 a is not defined  （不会去找上级作用域的变量a）</span></span><br><span class="line">    <span class="keyword">let</span> a=<span class="number">13</span>;    <span class="comment">//基于let创建变量，会把大部分&#123;&#125;当做一个私有的块级作用域（类似于函数的私有作用域），在这里也是重新检测语法规范，看一下是否是基于新语创建的变量，如果是按照新语法规范来解析</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//ES6中if后面的&#123;&#125;形成块级私有作用域</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Javascript/" rel="tag"><i class="fa fa-tag"></i> Javascript</a>
+              <a href="/tags/JS%E9%AB%98%E9%98%B6/" rel="tag"><i class="fa fa-tag"></i> JS高阶</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/05/18/js%E9%AB%98%E9%98%B61%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%81%E5%A0%86%E6%A0%88%E5%86%85%E5%AD%98/" rel="prev" title="js高阶1、数据类型的核心操作原理、堆栈内存">
+      <i class="fa fa-chevron-left"></i> js高阶1、数据类型的核心操作原理、堆栈内存
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/05/20/js%E9%AB%98%E9%98%B63%E3%80%81%E9%97%AD%E5%8C%85%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%EF%BC%8Ci++%EF%BC%8C++i/" rel="next" title="js高阶3、闭包，作用域，i++，++i">
+      js高阶3、闭包，作用域，i++，++i <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%88%E9%A2%84%E8%A7%A3%E6%9E%90%EF%BC%89%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">变量提升（预解析）：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B5%E9%9D%A2%E5%8A%A0%E8%BD%BD%E6%97%B6%E5%8F%AA%E6%8A%8A%E5%85%A8%E5%B1%80%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%B8%8D%E7%AE%A1%E7%A7%81%E6%9C%89%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%87%8C%E7%9A%84%E5%8F%98%E9%87%8F%EF%BC%8C%E5%BD%93%E5%87%BD%E6%95%B0%E6%89%A7%E8%A1%8C%E6%97%B6%E6%89%8D%E6%8A%8A%E5%87%BD%E6%95%B0%E5%86%85%E7%9A%84%E7%A7%81%E6%9C%89%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8B%E7%9A%84%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87"><span class="nav-number">1.1.</span> <span class="nav-text">页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6var%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%8F%AA%E6%98%AF%E6%8F%90%E5%89%8D%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%8B-%E5%B9%B6%E6%B2%A1%E6%9C%89%E8%B5%8B%E5%80%BC%EF%BC%9B"><span class="nav-number">1.2.</span> <span class="nav-text">带var关键字的只是提前声明一下 并没有赋值；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%A6function%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E5%9C%A8%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E9%98%B6%E6%AE%B5%E6%8A%8A%E5%A3%B0%E6%98%8E%E5%92%8C%E5%AE%9A%E4%B9%89%E9%83%BD%E5%AE%8C%E6%88%90%E4%BA%86"><span class="nav-number">1.3.</span> <span class="nav-text">带function关键字的在变量提升阶段把声明和定义都完成了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#js%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%97%B6%E9%81%87%E5%88%B0%E5%88%9B%E5%BB%BA%E5%87%BD%E6%95%B0%E7%9A%84%E4%BB%A3%E7%A0%81%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BF%87%EF%BC%88%E4%B8%8D%E5%9C%A8%E5%A3%B0%E6%98%8E%E4%B9%9F%E4%B8%8D%E8%BF%9B%E8%A1%8C%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C%EF%BC%89%E5%9B%A0%E4%B8%BA%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E6%97%B6-%E5%A3%B0%E6%98%8E%E5%92%8C%E5%AE%9A%E4%B9%89%E9%83%BD%E5%81%9A%E8%BF%87%E4%BA%86"><span class="nav-number">1.4.</span> <span class="nav-text">js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时 声明和定义都做过了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E8%BF%87%E7%9A%84%E5%8F%98%E9%87%8F%E4%B8%8D%E5%86%8D%E9%87%8D%E5%A4%8D%E5%A3%B0%E6%98%8E%EF%BC%8C%E9%81%87%E5%88%B0%E5%86%8D%E6%AC%A1%E5%A3%B0%E6%98%8E%E7%9B%B4%E6%8E%A5%E8%B7%B3%E8%BF%87"><span class="nav-number">1.5.</span> <span class="nav-text">声明过的变量不再重复声明，遇到再次声明直接跳过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5"><span class="nav-number">1.6.</span> <span class="nav-text">变量提升特殊情况</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%A8%E5%B1%80%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8B%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F%E6%97%B6%E5%B8%A6var-%E5%92%8C%E4%B8%8D%E5%B8%A6var%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.6.1.</span> <span class="nav-text">1.全局作用域下定义变量时带var 和不带var的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E7%A7%81%E6%9C%89%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8B%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F%E6%97%B6%E5%B8%A6var-%E5%92%8C%E4%B8%8D%E5%B8%A6var%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.6.2.</span> <span class="nav-text">2. 私有作用域下定义变量时带var 和不带var的区别</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text">作用域链</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81-%E6%89%A7%E8%A1%8C%E7%9A%84%E6%97%B6%E5%80%99%E9%81%87%E5%88%B0%E4%B8%80%E4%B8%AA%E5%8F%98%E9%87%8F%EF%BC%8C%E5%A6%82%E6%9E%9C%E8%BF%99%E4%B8%AA%E5%8F%98%E9%87%8F%E6%98%AF%E7%A7%81%E6%9C%89%E7%9A%84%EF%BC%8C%E9%82%A3%E4%B9%88%E6%8C%89%E7%85%A7%E7%A7%81%E6%9C%89%E5%8F%98%E9%87%8F%E5%A4%84%E7%90%86%E5%8D%B3%E5%8F%AF"><span class="nav-number">2.1.</span> <span class="nav-text">1、 执行的时候遇到一个变量，如果这个变量是私有的，那么按照私有变量处理即可</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81-%E5%A6%82%E6%9E%9C%E5%BD%93%E5%89%8D%E8%BF%99%E4%B8%AA%E5%8F%98%E9%87%8F%E4%B8%8D%E6%98%AF%E7%A7%81%E6%9C%89%E7%9A%84%EF%BC%8C%E9%9C%80%E8%A6%81%E5%90%91%E5%AE%83%E7%9A%84%E4%B8%8A%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%BF%9B%E8%A1%8C%E6%9F%A5%E6%89%BE%EF%BC%8C%E4%B8%8A%E7%BA%A7%E5%A6%82%E6%9E%9C%E6%B2%A1%E6%9C%89%EF%BC%8C%E5%88%99%E7%BB%A7%E7%BB%AD%E5%90%91%E4%B8%8A%E6%9F%A5%E6%89%BE%EF%BC%8C%E4%B8%80%E7%9B%B4%E6%89%BE%E5%88%B0window%E5%85%A8%E5%B1%80%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%BA%E6%AD%A2%EF%BC%8C%E6%88%91%E4%BB%AC%E6%8A%8A%E8%BF%99%E7%A7%8D%E6%9F%A5%E6%89%BE%E6%9C%BA%E5%88%B6%E5%8F%AB%E5%81%9A-%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE"><span class="nav-number">2.2.</span> <span class="nav-text">2、 如果当前这个变量不是私有的，需要向它的上级作用域进行查找，上级如果没有，则继续向上查找，一直找到window全局作用域为止，我们把这种查找机制叫做 作用域链</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%A6%82%E6%9E%9C%E4%B8%8A%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%9C%89%EF%BC%8C%E6%88%91%E4%BB%AC%E5%BD%93%E5%89%8D%E6%93%8D%E4%BD%9C%E7%9A%84%E9%83%BD%E6%98%AF%E4%B8%8A%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%AD%E7%9A%84%E5%8F%98%E9%87%8F%EF%BC%88%E5%A6%82%E6%9E%9C%E6%88%91%E4%BB%AC%E5%9C%A8%E5%BD%93%E5%89%8D%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%8A%8A%E5%80%BC%E6%94%B9%E4%BA%86%EF%BC%8C%E7%9B%B8%E5%BD%93%E4%BA%8E%E6%8A%8A%E4%B8%8A%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%AD%E7%9A%84%E8%BF%99%E4%B8%AA%E5%80%BC%E7%BB%99%E4%BF%AE%E6%94%B9%E4%BA%86%EF%BC%89"><span class="nav-number">2.2.1.</span> <span class="nav-text">1)如果上级作用域有，我们当前操作的都是上级作用域中的变量（如果我们在当前作用域把值改了，相当于把上级作用域中的这个值给修改了）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%A6%82%E6%9E%9C%E6%89%BE%E5%88%B0window%E4%B9%9F%E6%B2%A1%E6%9C%89%E8%BF%99%E4%B8%AA%E5%8F%98%E9%87%8F%EF%BC%9B%E5%8F%98%E9%87%8F-%E5%80%BC%EF%BC%9A%E7%9B%B8%E5%BD%93%E4%BA%8E%E7%BB%99window%E8%AE%BE%E7%BD%AE%E4%BA%86%E4%B8%80%E4%B8%AA%E5%B1%9E%E6%80%A7-%E4%BB%A5%E5%90%8E%E5%86%8D%E6%93%8D%E4%BD%9Cwindow%E4%B8%8B%E5%B0%B1%E6%9C%89%E4%BA%86%EF%BC%9B%E4%BD%86%E6%98%AF%E5%9C%A8%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C%E4%B9%8B%E5%89%8Dalert-%E5%8F%98%E9%87%8F-%EF%BC%9A%E6%83%B3%E8%A6%81%E8%BE%93%E5%87%BA%E8%BF%99%E4%B8%AA%E5%8F%98%E9%87%8F%EF%BC%8C%E6%AD%A4%E6%97%B6%E6%98%AF%E6%B2%A1%E6%9C%89%E7%9A%84%EF%BC%8C%E6%89%80%E4%BB%A5%E4%BC%9A%E6%8A%A5%E9%94%99"><span class="nav-number">2.2.2.</span> <span class="nav-text">2)如果找到window也没有这个变量；变量&#x3D;值：相当于给window设置了一个属性 以后再操作window下就有了；但是在赋值操作之前alert(变量)：想要输出这个变量，此时是没有的，所以会报错</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BE%8B%E9%A2%98"><span class="nav-number">2.3.</span> <span class="nav-text">例题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AA%E5%AF%B9%E7%AD%89%E5%8F%B7%E5%B7%A6%E8%BE%B9%E7%9A%84%E8%BF%9B%E8%A1%8C%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87"><span class="nav-number">3.</span> <span class="nav-text">只对等号左边的进行变量提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA%E5%AF%B9%E7%AD%89%E5%8F%B7%E5%B7%A6%E8%BE%B9%E8%BF%9B%E8%A1%8C%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E5%8F%B3%E8%BE%B9%E6%98%AF%E5%80%BC%E4%B8%8D%E4%BC%9A%E6%8F%90%E5%89%8D%E5%A3%B0%E6%98%8E%EF%BC%88%E5%B0%B1%E7%AE%97%E6%98%AF%E5%87%BD%E6%95%B0%E4%B9%9F%E4%B8%8D%E4%BC%9A%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">只对等号左边进行变量提升，右边是值不会提前声明（就算是函数也不会变量提升）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E5%87%BD%E6%95%B0-%E6%9C%80%E5%A5%BD%E7%94%A8%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%96%B9%E5%BC%8F-var-fn-function"><span class="nav-number">3.2.</span> <span class="nav-text">声明函数  最好用函数表达式的方式 var fn&#x3D;function(){}</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E7%AE%A1%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%90%A6%E6%88%90%E7%AB%8B%E9%83%BD%E8%A6%81%E8%BF%9B%E8%A1%8C%E9%A2%84%E8%A7%A3%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">不管条件是否成立都要进行预解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E7%AE%A1%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%90%A6%E6%88%90%E7%AB%8B%EF%BC%8C%E5%88%A4%E6%96%AD%E4%BD%93%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84var-function%E9%83%BD%E4%BC%9A%E8%BF%9B%E8%A1%8C%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87"><span class="nav-number">4.1.</span> <span class="nav-text">不管条件是否成立，判断体中出现的var&#x2F;function都会进行变量提升</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E6%96%B0%E7%89%88%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%AD%EF%BC%8Cfunction%E5%A3%B0%E6%98%8E%E7%9A%84%E5%8F%98%E9%87%8F%E5%8F%AA%E5%A3%B0%E6%98%8E%E4%B8%8D%E8%83%BD%E5%AE%9A%E4%B9%89%EF%BC%88%E5%89%8D%E6%8F%90%EF%BC%9A%E5%87%BD%E6%95%B0%E5%BF%85%E9%A1%BB%E5%9C%A8%E5%88%A4%E6%96%AD%E4%BD%93%E4%B8%AD%EF%BC%89"><span class="nav-number">4.1.1.</span> <span class="nav-text">在新版浏览器中，function声明的变量只声明不能定义（前提：函数必须在判断体中）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%80%81%E7%89%88%E6%9C%AC%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BD%8E%E7%89%88%E6%9C%ACie-%E4%B8%8D%E7%AE%A1%E6%9D%A1%E4%BB%B6%E6%88%90%E4%B8%8D%E6%88%90%E7%AB%8B-function%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E5%B9%B6%E5%AE%9A%E4%B9%89"><span class="nav-number">4.1.2.</span> <span class="nav-text">老版本浏览器低版本ie 不管条件成不成立 function变量提升并定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%88%B0%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E5%9C%B0%E6%96%B9"><span class="nav-number">4.2.</span> <span class="nav-text">代码执行到条件判断地方</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E3%80%90%E6%9D%A1%E4%BB%B6%E4%B8%8D%E6%88%90%E7%AB%8B%E6%97%B6%E3%80%91-%E8%BF%9B%E5%85%A5%E4%B8%8D%E5%88%B0%E5%88%A4%E6%96%AD%E4%BD%93%E4%B8%AD%EF%BC%8C%E8%B5%8B%E5%80%BC%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B8%8D%E6%89%A7%E8%A1%8C%EF%BC%8C%E6%AD%A4%E6%97%B6%E4%BE%9D%E7%84%B6%E6%98%AFundefined"><span class="nav-number">4.2.1.</span> <span class="nav-text">1. 【条件不成立时】 进入不到判断体中，赋值的代码不执行，此时依然是undefined</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E3%80%90%E6%9D%A1%E4%BB%B6%E6%88%90%E7%AB%8B%E6%97%B6%E3%80%91-%E8%BF%9B%E5%85%A5%E5%88%A4%E6%96%AD%E4%BD%93%E4%B8%AD%E7%9A%84%E7%AC%AC%E4%B8%80%E4%BB%B6%E4%BA%8B%E4%B8%8D%E6%98%AF%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%EF%BC%8C%E8%80%8C%E6%98%AF%E6%8A%8A%E4%B9%8B%E5%89%8D%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E6%B2%A1%E6%9C%89%E5%AE%9A%E4%B9%89%E7%9A%84%E5%87%BD%E6%95%B0%E9%A6%96%E5%85%88%E5%AE%9A%E4%B9%89%E4%BA%86%EF%BC%88%E8%BF%9B%E5%85%A5%E5%88%A4%E6%96%AD%E4%BD%93%E4%B8%AD%E5%87%BD%E6%95%B0%E5%B0%B1%E5%AE%9A%E4%B9%89%E4%BA%86%EF%BC%8C%E4%B8%BA%E4%BA%86%E8%BF%8E%E5%90%88es6%E7%9A%84%E5%9D%97%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F%EF%BC%89"><span class="nav-number">4.2.2.</span> <span class="nav-text">2. 【条件成立时】 进入判断体中的第一件事不是代码执行，而是把之前变量提升没有定义的函数首先定义了（进入判断体中函数就定义了，为了迎合es6的块级作用域）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%80%81%E7%89%88%E6%9C%AC%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BD%8E%E7%89%88%E6%9C%ACie-%E4%B8%8D%E7%AE%A1%E6%9D%A1%E4%BB%B6%E6%88%90%E4%B8%8D%E6%88%90%E7%AB%8B-function%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E5%B9%B6%E5%AE%9A%E4%B9%89"><span class="nav-number">4.2.3.</span> <span class="nav-text">3. 老版本浏览器低版本ie 不管条件成不成立 function变量提升并定义</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-number">4.3.</span> <span class="nav-text">案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E9%87%8D%E5%90%8D%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">5.</span> <span class="nav-text">变量提升重名的处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E9%98%B6%E6%AE%B5%EF%BC%8C%E5%A6%82%E6%9E%9C%E5%90%8D%E5%AD%97%E9%87%8D%E5%A4%8D%E4%BA%86%EF%BC%8C%E4%B8%8D%E4%BC%9A%E9%87%8D%E6%96%B0%E7%9A%84%E8%BF%9B%E8%A1%8C%E5%A3%B0%E6%98%8E%EF%BC%8C%E4%BD%86%E6%98%AF%E4%BC%9A%E9%87%8D%E6%96%B0%E8%BF%9B%E8%A1%8C%E5%AE%9A%E4%B9%89%EF%BC%88%E5%90%8E%E9%9D%A2%E8%B5%8B%E7%9A%84%E5%80%BC%E6%8A%8A%E5%89%8D%E8%BE%B9%E8%B5%8B%E7%9A%84%E5%80%BC%E7%BB%99%E6%9B%BF%E6%8D%A2%E6%8E%89%EF%BC%89"><span class="nav-number">5.1.</span> <span class="nav-text">在变量提升阶段，如果名字重复了，不会重新的进行声明，但是会重新进行定义（后面赋的值把前边赋的值给替换掉）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E5%B9%B6%E5%AE%9A%E4%B9%89%E5%90%8E%EF%BC%8C%E4%BB%A3%E7%A0%81%E8%87%B3%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%89%A7%E8%A1%8C%EF%BC%8C%E9%81%87%E5%88%B0%E5%A3%B0%E6%98%8E%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0%E7%9A%84%E4%BB%A3%E7%A0%81%E6%97%B6%E4%B8%8D%E5%86%8D%E5%A3%B0%E6%98%8E%E5%92%8C%E5%AE%9A%E4%B9%89"><span class="nav-number">5.2.</span> <span class="nav-text">函数变量提升并定义后，代码至上而下执行，遇到声明定义函数的代码时不再声明和定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES6%E4%B8%AD%E7%9A%84let%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87"><span class="nav-number">6.</span> <span class="nav-text">ES6中的let不存在变量提升</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%BD%93%E5%89%8D%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%BB%A3%E7%A0%81%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%89%A7%E8%A1%8C%E4%B9%8B%E5%89%8D%EF%BC%8C%E6%B5%8F%E8%A7%88%E5%99%A8%E4%BC%9A%E5%81%9A%E4%B8%80%E4%B8%AA%E9%87%8D%E5%A4%8D%E6%80%A7%E6%A3%80%E6%B5%8B-%E8%AF%AD%E6%B3%95%E6%A3%80%E6%B5%8B"><span class="nav-number">6.1.</span> <span class="nav-text">在当前作用域代码自上而下执行之前，浏览器会做一个重复性检测(语法检测)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8ES6%E4%B8%AD%E5%9F%BA%E4%BA%8ELET-CONST%E7%AD%89%E6%96%B9%E5%BC%8F%E5%88%9B%E5%BB%BA%E7%9A%84%E5%8F%98%E9%87%8F%E6%88%96%E8%80%85%E5%87%BD%E6%95%B0%EF%BC%8C%E4%B8%8D%E5%AD%98%E5%9C%A8%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E6%9C%BA%E5%88%B6%EF%BC%9A%E5%88%87%E6%96%AD%E4%BA%86%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%92%8CWINDOW%E5%B1%9E%E6%80%A7%E7%9A%84%E6%98%A0%E5%B0%84%E6%9C%BA%E5%88%B6"><span class="nav-number">6.2.</span> <span class="nav-text">在ES6中基于LET&#x2F;CONST等方式创建的变量或者函数，不存在变量提升机制：切断了全局变量和WINDOW属性的映射机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES6%E5%90%8C%E6%A0%B7%E5%85%B7%E6%9C%89%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE"><span class="nav-number">6.3.</span> <span class="nav-text">ES6同样具有作用域链</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS%E4%B8%AD%E7%9A%84%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA"><span class="nav-number">7.</span> <span class="nav-text">JS中的暂时性死区</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yapei Li"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Yapei Li</p>
+  <div class="site-description" itemprop="description">专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yapeili" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yapeili" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:webyapeili@sina.com" title="E-Mail → mailto:webyapeili@sina.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yapei Li</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

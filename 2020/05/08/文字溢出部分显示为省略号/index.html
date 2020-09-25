@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="1234567891011white-space:nowrap;         &#x2F;&#x2F;强制不换行（中英文都起作用）white-space:pre-wrap;       &#x2F;&#x2F;只对中文起作用，强制换行word-break:break-all;       &#x2F;&#x2F; 只对英文起作用，以字母作为依据，强制换行word-break:break-word;      &#x2F;&#x2F;只对英文起作用，以单词作为依据，强制换行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文字溢出部分显示为省略号">
+<meta property="og:url" content="http://yoursite.com/2020/05/08/%E6%96%87%E5%AD%97%E6%BA%A2%E5%87%BA%E9%83%A8%E5%88%86%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%9C%81%E7%95%A5%E5%8F%B7/index.html">
+<meta property="og:site_name" content="Yapei Li">
+<meta property="og:description" content="1234567891011white-space:nowrap;         &#x2F;&#x2F;强制不换行（中英文都起作用）white-space:pre-wrap;       &#x2F;&#x2F;只对中文起作用，强制换行word-break:break-all;       &#x2F;&#x2F; 只对英文起作用，以字母作为依据，强制换行word-break:break-word;      &#x2F;&#x2F;只对英文起作用，以单词作为依据，强制换行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-08T04:39:04.000Z">
+<meta property="article:modified_time" content="2020-05-08T04:39:04.000Z">
+<meta property="article:author" content="Yapei Li">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="CSS技巧">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/08/%E6%96%87%E5%AD%97%E6%BA%A2%E5%87%BA%E9%83%A8%E5%88%86%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%9C%81%E7%95%A5%E5%8F%B7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>文字溢出部分显示为省略号 | Yapei Li</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yapei Li</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于前端领域</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yapeili" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/08/%E6%96%87%E5%AD%97%E6%BA%A2%E5%87%BA%E9%83%A8%E5%88%86%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%9C%81%E7%95%A5%E5%8F%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          文字溢出部分显示为省略号
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-08 12:39:04" itemprop="dateCreated datePublished" datetime="2020-05-08T12:39:04+08:00">2020-05-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">white-space:nowrap;         //强制不换行（中英文都起作用）</span><br><span class="line"></span><br><span class="line">white-space:pre-wrap;       //只对中文起作用，强制换行</span><br><span class="line"></span><br><span class="line">word-break:break-all;       // 只对英文起作用，以字母作为依据，强制换行</span><br><span class="line"></span><br><span class="line">word-break:break-word;      //只对英文起作用，以单词作为依据，强制换行</span><br><span class="line"></span><br><span class="line">overflow:hidden;            //超出的内容隐藏</span><br><span class="line"></span><br><span class="line">text-overflow:ellipsis;     //超出的内容为省略号</span><br></pre></td></tr></table></figure>
+<h2 id="单行文本"><a href="#单行文本" class="headerlink" title="单行文本"></a>单行文本</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;       <span class="comment">/* 使文本不可换行 */</span></span><br><span class="line">  <span class="attribute">word-break</span>: break-all;     <span class="comment">/* 英文换行，以字母作为依据 */</span></span><br><span class="line">  <span class="attribute">overflow</span>: hidden;          <span class="comment">/* 隐藏溢出部分 */</span> </span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;   <span class="comment">/* 显示省略符号来代表被隐藏的文本 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="多行文本"><a href="#多行文本" class="headerlink" title="多行文本"></a>多行文本</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.text</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">    <span class="attribute">text-overflow</span>: ellipsis;       <span class="comment">/* 超出的内容显示省略号 */</span></span><br><span class="line">    <span class="attribute">word-break</span>: break-all;         <span class="comment">/* 英文换行，以字母作为依据 */</span></span><br><span class="line">    <span class="attribute">display</span>: -webkit-box;          <span class="comment">/* 将对象作为弹性伸缩盒子模型显示 */</span>   </span><br><span class="line">    <span class="attribute">-webkit-box-orient</span>: vertical;  <span class="comment">/*设置子元素排列方式*/</span></span><br><span class="line">    <span class="attribute">-webkit-line-clamp</span>: <span class="number">3</span>;         <span class="comment">/*设置显示的行数，多出的部分会显示为...*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<blockquote>
+<p>缺点： 只<code>适用于WebKit内核</code>的浏览器。所以大部分移动端浏览器都支持，<code>google</code>，<code>Safari</code> 浏览器只要不是版本过低都支持。<code>ie，火狐浏览器不支持</code>这个方法。</p>
+</blockquote>
+<h3 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h3><blockquote>
+<p>使用伪元素实现，将伪元素放在最后一个字的上方，达到显示省略号的目的。该方法兼容性较好，但文字未超出的情况下也会出现省略号。</p>
+</blockquote>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.2em</span>;</span><br><span class="line">  <span class="attribute">max-height</span>: <span class="number">3.6em</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="comment">/*设置文本为两端对齐*/</span></span><br><span class="line">  <span class="attribute">text-align</span>: justify;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">p</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;...&quot;</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="comment">/*将省略号的大小设置为1个字体大小*/</span></span><br><span class="line">  <span class="attribute">width</span>: <span class="number">1em</span>;</span><br><span class="line">  <span class="comment">/*设置背景，将最后一个字覆盖掉*/</span></span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fff</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="white-space"><a href="#white-space" class="headerlink" title="white-space"></a>white-space</h2><blockquote>
+<p>用来设置如何处理元素中的 空白</p>
+<p>字符是否换行显示</p>
+</blockquote>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Keyword values */</span></span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">normal</span>;</span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">nowrap</span>;</span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">pre</span>;</span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">pre-wrap</span>;</span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">pre-line</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* https://github.com/w3c/csswg-drafts/pull/2841 */</span></span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">break-spaces</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="值"><a href="#值" class="headerlink" title="值"></a>值</h3><table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">含义</th>
+<th align="center">兼容性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">normal</td>
+<td align="center">连续的空白符会被合并，换行符会被当作空白符来处理。换行在填充「行框盒子(line boxes)」时是必要</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">nowrap</td>
+<td align="center">连续的空白符会被合并。但<code>不允许换行</code></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">pre</td>
+<td align="center">连续的空白符会被保留。在遇到换行符或者<code>&lt;br&gt;</code>元素时才会换行</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">pre-wrap</td>
+<td align="center">连续的空白符会被保留。在遇到换行符或者<code>&lt;br&gt;</code>元素，或者需要为了填充「行框盒子(<code>line boxes</code>)」时才会换行。只<code>对中文起作用，强制换行</code></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">pre-line</td>
+<td align="center">连续的空白符会被合并。在遇到换行符或者<code>&lt;br&gt;</code>元素，或者需要为了填充「行框盒子(<code>line boxes</code>)」时会换行</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">break-spaces</td>
+<td align="center">与 pre-wrap的行为相同，除了下边的注释</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>任何保留的空白序列总是占用空间，包括在行尾。<br>每个保留的空格字符后都存在换行机会，包括空格字符之间。<br>这样保留的空间占用空间而不会挂起，从而影响盒子的固有尺寸（最小内容大小和最大内容大小）。</p>
+</blockquote>
+<h3 id="white-space-值的行为"><a href="#white-space-值的行为" class="headerlink" title="white-space 值的行为"></a>white-space 值的行为</h3><table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">换行符</th>
+<th align="center">空格和制表符</th>
+<th align="center">文字换行</th>
+<th align="center">行尾空格</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">normal</td>
+<td align="center">合并</td>
+<td align="center">合并</td>
+<td align="center">换行</td>
+<td align="center">删除</td>
+</tr>
+<tr>
+<td align="center">nowrap</td>
+<td align="center">合并</td>
+<td align="center">合并</td>
+<td align="center">不换行</td>
+<td align="center">删除</td>
+</tr>
+<tr>
+<td align="center">pre</td>
+<td align="center">保留</td>
+<td align="center">保留</td>
+<td align="center">不换行</td>
+<td align="center">保留</td>
+</tr>
+<tr>
+<td align="center">pre-wrap</td>
+<td align="center">保留</td>
+<td align="center">保留</td>
+<td align="center">换行</td>
+<td align="center">挂起</td>
+</tr>
+<tr>
+<td align="center">pre-line</td>
+<td align="center">保留</td>
+<td align="center">合并</td>
+<td align="center">换行</td>
+<td align="center">删除</td>
+</tr>
+<tr>
+<td align="center">break-spaces</td>
+<td align="center">保留</td>
+<td align="center">保留</td>
+<td align="center">换行</td>
+<td align="center">换行</td>
+</tr>
+</tbody></table>
+<h2 id="word-break"><a href="#word-break" class="headerlink" title="word-break"></a>word-break</h2><blockquote>
+<p>指定了怎样在<code>单词内</code>断行</p>
+</blockquote>
+<h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 关键字值 */</span></span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">normal</span>; </span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">break-all</span>; </span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">keep-all</span>;</span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">break-word</span>; <span class="comment">/* 已弃用 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 全局值 */</span></span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">inherit</span>;</span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">initial</span>;</span><br><span class="line"><span class="selector-tag">word-break</span>: <span class="selector-tag">unset</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="值-1"><a href="#值-1" class="headerlink" title="值"></a>值</h4><blockquote>
+<p><code>CJK</code> 指中文/日文/韩文</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">含义</th>
+<th align="center">兼容性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">normal</td>
+<td align="center">使用默认的换行规则（中文换行，连续英文不换行）</td>
+<td align="center">field3</td>
+</tr>
+<tr>
+<td align="center">break-all</td>
+<td align="center">允许任意非CJK文本间的单词断行（只对英文起作用，以字母作为依据，强制换行）</td>
+<td align="center">所有浏览器都支持</td>
+</tr>
+<tr>
+<td align="center">keep-all</td>
+<td align="center">不允许CJK文本中的单词换行，只能在半角空格或连字符处换行。非CJK文本的行为实际上和normal一致。</td>
+<td align="center">iOS下的Safari8/9都还不支持,现在移动端还不适合使用</td>
+</tr>
+<tr>
+<td align="center">break-word</td>
+<td align="center">他的效果是<code>word-break: normal</code> 和 <code>overflow-wrap: anywhere</code>  的合，不论 <code>overflow-wrap</code>的值是多少（只对英文起作用，以单词作为依据，强制换行）</td>
+<td align="center">IE不支持</td>
+</tr>
+</tbody></table>
+<h2 id="overflow-wrap-amp-word-wrap"><a href="#overflow-wrap-amp-word-wrap" class="headerlink" title="overflow-wrap &amp; word-wrap"></a>overflow-wrap &amp; word-wrap</h2><h3 id="overflow-wrap-与-word-wrap-关系"><a href="#overflow-wrap-与-word-wrap-关系" class="headerlink" title="overflow-wrap 与 word-wrap  关系"></a>overflow-wrap 与 word-wrap  关系</h3><blockquote>
+<p><code>word-wrap</code> 属性原本属于微软的一个私有属性，在<code>CSS3</code>现在的文本规范草案中已经被<code>重名为 overflow-wrap</code> 。 <code>word-wrap </code>现在被当作 <code>overflow-wrap 的 “别名”</code>。 稳定的谷歌 Chrome 和 Opera 浏览器版本支持这种新语法。</p>
+</blockquote>
+<h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h3><blockquote>
+<p>用来说明当一个不能被分开的字符串太长而不能填充其包裹盒时，为防止其溢出，浏览器是否允许这样的单词中断换行</p>
+<p>与<code>word-break</code>相比，<code>overflow-wrap</code>仅在无法将整个单词放在自己的行而不会溢出的情况下才会产生中断。</p>
+</blockquote>
+<h3 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Keyword values */</span></span><br><span class="line"><span class="selector-tag">overflow-wrap</span>: <span class="selector-tag">normal</span>;</span><br><span class="line"><span class="selector-tag">overflow-wrap</span>: <span class="selector-tag">break-word</span>;</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">normal</td>
+<td align="center">行只能在正常的单词断点处中断。（例如两个单词之间的空格）</td>
+</tr>
+<tr>
+<td align="center">break-word</td>
+<td align="center">表示如果行内没有多余的地方容纳该单词到结尾，则那些正常的不能被分割的单词会被强制分割换行</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+              <a href="/tags/CSS%E6%8A%80%E5%B7%A7/" rel="tag"><i class="fa fa-tag"></i> CSS技巧</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/07/SCSS/" rel="prev" title="SCSS">
+      <i class="fa fa-chevron-left"></i> SCSS
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/09/Flex%E5%B8%83%E5%B1%80/" rel="next" title="Flex布局">
+      Flex布局 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E8%A1%8C%E6%96%87%E6%9C%AC"><span class="nav-number">1.</span> <span class="nav-text">单行文本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E6%96%87%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">多行文本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%951"><span class="nav-number">2.1.</span> <span class="nav-text">方法1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%B3%952"><span class="nav-number">2.2.</span> <span class="nav-text">方法2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#white-space"><span class="nav-number">3.</span> <span class="nav-text">white-space</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%80%BC"><span class="nav-number">3.2.</span> <span class="nav-text">值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#white-space-%E5%80%BC%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">3.3.</span> <span class="nav-text">white-space 值的行为</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word-break"><span class="nav-number">4.</span> <span class="nav-text">word-break</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="nav-number">4.1.</span> <span class="nav-text">语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%BC-1"><span class="nav-number">4.1.1.</span> <span class="nav-text">值</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#overflow-wrap-amp-word-wrap"><span class="nav-number">5.</span> <span class="nav-text">overflow-wrap &amp; word-wrap</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#overflow-wrap-%E4%B8%8E-word-wrap-%E5%85%B3%E7%B3%BB"><span class="nav-number">5.1.</span> <span class="nav-text">overflow-wrap 与 word-wrap  关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%9C%E7%94%A8"><span class="nav-number">5.2.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95-2"><span class="nav-number">5.3.</span> <span class="nav-text">语法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yapei Li"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Yapei Li</p>
+  <div class="site-description" itemprop="description">专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yapeili" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yapeili" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:webyapeili@sina.com" title="E-Mail → mailto:webyapeili@sina.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yapei Li</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="BFC的定义 BFC(Block formatting context)直译为”块级格式化上下文“。 它是一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干。 它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用  FC 是formatting conte">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BFC">
+<meta property="og:url" content="http://yoursite.com/2020/05/03/BFC/index.html">
+<meta property="og:site_name" content="Yapei Li">
+<meta property="og:description" content="BFC的定义 BFC(Block formatting context)直译为”块级格式化上下文“。 它是一个独立的渲染区域，只有Block-level box参与， 它规定了内部的Block-level Box如何布局，并且与这个区域外部毫不相干。 它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用  FC 是formatting conte">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/BFC1.png">
+<meta property="og:image" content="http://yoursite.com/img/BFC5.png">
+<meta property="og:image" content="http://yoursite.com/img/BFC6.png">
+<meta property="og:image" content="http://yoursite.com/img/BFC2.png">
+<meta property="og:image" content="http://yoursite.com/img/BFC3.gif">
+<meta property="og:image" content="http://yoursite.com/img/BFC4.gif">
+<meta property="article:published_time" content="2020-05-03T13:39:04.000Z">
+<meta property="article:modified_time" content="2020-05-03T13:39:04.000Z">
+<meta property="article:author" content="Yapei Li">
+<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="CSS技巧">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/BFC1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/05/03/BFC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>BFC | Yapei Li</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Yapei Li</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">专注于前端领域</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/yapeili" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/03/BFC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BFC
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-03 21:39:04" itemprop="dateCreated datePublished" datetime="2020-05-03T21:39:04+08:00">2020-05-03</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="BFC的定义"><a href="#BFC的定义" class="headerlink" title="BFC的定义"></a>BFC的定义</h2><blockquote>
+<p><code>BFC</code>(Block formatting context)直译为”<code>块级格式化上下文</code>“。</p>
+<p>它是一个独立的渲染区域，只有<code>Block-level box</code>参与， 它规定了内部的<code>Block-level Box</code>如何布局，并且与这个区域外部毫不相干。</p>
+<p>它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系和相互作用</p>
+</blockquote>
+<h3 id="FC"><a href="#FC" class="headerlink" title="FC"></a>FC</h3><blockquote>
+<p>是<code>formatting context</code>的首字母缩写，直译过来是<code>格式化上下文</code>，它是<code>页面中的一块渲染区域</code>，有一套渲染规则，<code>决定了其子元素如何布局</code>，以及<code>和其他元素之间的关系和作用</code>。</p>
+<p>常见的FC有<code>BFC</code>、<code>IFC</code>（行级格式化上下文），还有<code>GFC</code>（网格布局格式化上下文）和<code>FFC</code>（自适应格式化上下文）</p>
+</blockquote>
+<h3 id="block-level-box-块级盒子"><a href="#block-level-box-块级盒子" class="headerlink" title="block-level box(块级盒子)"></a>block-level box(块级盒子)</h3><p><img src="/img/BFC1.png" alt="Alt text"></p>
+<blockquote>
+<p>盒子是由<code>margin</code>、<code>border</code>、<code>padding</code>、<code>content</code>组成的，实际上每种类型的四条边定义了一个盒子，分别是分别是<code>content box</code>、<code>padding box</code>、<code>border box</code>、<code>margin box</code>，这四种类型的盒子一直存在，即使他们的值为0。</p>
+<p>决定块盒在包含块中与相邻块盒的垂直间距的便是<code>margin-box</code>。</p>
+<p><code>Box</code>之间的距离虽然也可以使用<code>padding</code>来控制，但是此时实际上还是属于<code>box</code>内部里面，而且使用<code>padding</code>来控制的话就不能再使用<code>border</code>属性了。</p>
+</blockquote>
+<h3 id="三种文档流的定位方案（控制元素的布局）"><a href="#三种文档流的定位方案（控制元素的布局）" class="headerlink" title="三种文档流的定位方案（控制元素的布局）"></a>三种文档流的定位方案（控制元素的布局）</h3><h4 id="常规流-normal-flow"><a href="#常规流-normal-flow" class="headerlink" title="常规流 (normal flow)"></a>常规流 (normal flow)</h4><blockquote>
+<p>在普通流中，元素按照其在 <code>HTML</code> 中的<code>先后位置至上而下</code>布局</p>
+<p>也可以说，普通流中元素的位置由该元素在 <code>HTML 文档</code>中的位置决定</p>
+</blockquote>
+<ul>
+<li>在常规流中，盒一个接着一个排列;</li>
+<li>在块级格式化上下文里面， 它们竖着排列；块级元素则会被渲染为完整的一个新行，除非另外指定，否则所有元素默认都是普通流定位</li>
+<li>在行内格式化上下文里面， 它们横着排列,直到当行被占满然后换行</li>
+<li>当<code>position</code>为<code>static</code>或<code>relative</code>，并且<code>float</code>为<code>none</code>时会触发常规流；</li>
+<li>对于静态定位(<code>static positioning</code>)，<code>position: static</code>，盒的位置是常规流布局里的位置；</li>
+<li>对于相对定位(<code>relative positioning</code>)，<code>position: relative</code>，盒偏移位置由<code>top、bottom、left、right</code>属性定义。<code>即使有偏移，仍然保留原有的位置</code>，其它常规流不能占用这个位置。</li>
+</ul>
+<h4 id="浮动-float"><a href="#浮动-float" class="headerlink" title="浮动 (float)"></a>浮动 (float)</h4><ul>
+<li>左浮动元素尽量靠左、靠上，右浮动同理</li>
+<li>这导致常规流环绕在它的周边，除非设置 clear 属性</li>
+<li>浮动元素不会影响块级元素的布局</li>
+<li>但浮动元素会<code>影响行内元素</code>的布局，让其<code>围绕在自己周围</code>，撑大父级元素，从而间接影响块级元素布局</li>
+<li>最高点不会超过当前行的最高点、它前面的浮动元素的最高点</li>
+<li>不超过它的包含块，除非元素本身已经比包含块更宽</li>
+<li>行内元素出现在左浮动元素的右边和右浮动元素的左边，左浮动元素的左边和右浮动元素的右边是不会摆放浮动元素的</li>
+</ul>
+<h5 id="浮动会造成文本环绕-和-行内元素环绕"><a href="#浮动会造成文本环绕-和-行内元素环绕" class="headerlink" title="浮动会造成文本环绕 和 行内元素环绕"></a>浮动会造成文本环绕 和 行内元素环绕</h5><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;border: 2px solid #ccc;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width: 100px;height: 100px;float: left;background: red;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>span会环绕红色div<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>span会环绕红色div<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span>&gt;</span>span会环绕红色div<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    文字也会环绕红色div</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/img/BFC5.png" alt="Alt text"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;float: left; width: 100px; height: 100px; background: #000;&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;height: 200px; background: #AAA;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot; width: 30px; height: 30px; background: red;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span>content<span class="tag">&lt;/<span class="name">p</span>&gt;</span> <span class="tag">&lt;<span class="name">p</span>&gt;</span>content<span class="tag">&lt;/<span class="name">p</span>&gt;</span> <span class="tag">&lt;<span class="name">p</span>&gt;</span>content<span class="tag">&lt;/<span class="name">p</span>&gt;</span> <span class="tag">&lt;<span class="name">p</span>&gt;</span>content<span class="tag">&lt;/<span class="name">p</span>&gt;</span> <span class="tag">&lt;<span class="name">p</span>&gt;</span>content<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/img/BFC6.png" alt="Alt text"></p>
+<blockquote>
+<p>问题：为什么 div 的左上角被覆盖了，而文本却没有被覆盖，<code>float</code>不是应该跟普通流不在一个层级吗？是因为<code>float</code>属性不生效吗？</p>
+</blockquote>
+<p><strong>float的定义和用法：</strong></p>
+<blockquote>
+<p>浮动元素会生成一个块级框，而不论它本身是何种元素</p>
+<p><code>float</code>当初设计的时候就是<code>为了使文本围绕在浮动对象的周围</code>。</p>
+</blockquote>
+<h4 id="绝对定位-absolute-positioning"><a href="#绝对定位-absolute-positioning" class="headerlink" title="绝对定位 (absolute positioning)"></a>绝对定位 (absolute positioning)</h4><ul>
+<li>绝对定位方案，盒从常规流中被移除，不影响常规流的布局；</li>
+<li>它的定位相对于它的包含块，相关CSS属性：<code>top</code>、<code>bottom</code>、<code>left</code>、<code>right</code>；</li>
+<li>如果元素的属性<code>position</code>为<code>absolute</code>或<code>fixed</code>，它是绝对定位元素；</li>
+<li>对于<code>position: absolute</code>，元素定位将相对于上级元素中最近的一个<code>relative</code>、<code>fixed</code>、<code>absolute</code>，如果没有则相对于<code>body</code>；</li>
+</ul>
+<h2 id="触发BFC"><a href="#触发BFC" class="headerlink" title="触发BFC"></a>触发BFC</h2><ul>
+<li>【1】根元素，即<code>HTML</code>元素</li>
+<li>【2】浮动元素，<code>float</code>的值不为<code>none</code></li>
+<li>【3】<code>overflow</code>的值不为<code>visible</code> (为<code>hidden</code>、<code>auto</code>、<code>scroll</code>)</li>
+<li>【4】<code>display</code>的值为<code>inline-block</code>、<code>table-cell</code>、<code>table-caption</code>;(与浮动的效果类似)</li>
+<li>【5】定位元素，<code>position</code>的值为<code>absolute</code>或<code>fixed</code></li>
+</ul>
+<blockquote>
+<p><code>display:table</code>也可以生成<code>BFC</code>的原因在于<code>Table</code>会默认生成一个匿名的<code>table-cell</code>，是这个匿名的<code>table-cell</code>生成了<code>BFC</code></p>
+</blockquote>
+<h2 id="BFC布局规则："><a href="#BFC布局规则：" class="headerlink" title="BFC布局规则："></a>BFC布局规则：</h2><ul>
+<li>1、内部的<code>Box</code>会在垂直方向，一个接一个地放置。（与常规流中的块级元素及行内元素相同）</li>
+<li>2、内部的<code>Box</code>垂直方向的距离由<code>margin</code>决定。属于同一个<code>BFC</code>的两个相邻<code>Box</code>的<code>margin</code>会发生重叠</li>
+<li>3、每个元素的<code>margin box</code>的左边， 与包含块(父级块)<code>border box</code>的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此（这说明BFC中子元素不会超出他的包含块，而position为absolute的元素可以超出他的包含块边界）</li>
+<li>4、<code>BFC</code>的区域不会与<code>float box</code>重叠</li>
+<li>5、<code>BFC</code>就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素。反之也如此。</li>
+<li>6、计算<code>BFC</code>的高度时，浮动元素也参与计算</li>
+</ul>
+<h3 id="Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠"><a href="#Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠" class="headerlink" title="Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠"></a>Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">div&#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 100px;</span><br><span class="line">    background: lightblue;</span><br><span class="line">    margin: 100px;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/img/BFC2.png" alt="Alt text"></p>
+<blockquote>
+<p>因为两个<code>div</code> 元素都处于同一个 <code>BFC</code> 容器下 (这里指 <code>body</code> 元素) 所以第一个 <code>div</code> 的下边距和第二个 <code>div </code>的上边距发生了重叠，所以两个盒子之间距离只有 <code>100px</code>，而不是 <code>200px</code></p>
+<p>这不是 <code>CSS </code>的 <code>bug</code>，这是·的一种规范，如果想要避免外边距的重叠，可以将其放在<code>不同的 BFC</code> 容器中(<code>详见 BFC的作用4</code>)。</p>
+</blockquote>
+<h3 id="每个元素的margin-box的左边，-与包含块border-box的左边相接触-对于从左往右的格式化，否则相反-。即使存在浮动也是如此"><a href="#每个元素的margin-box的左边，-与包含块border-box的左边相接触-对于从左往右的格式化，否则相反-。即使存在浮动也是如此" class="headerlink" title="每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此"></a>每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;par&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;child&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 给这两个子div加浮动，浮动的结果，如果没有清除浮动的话，父div不会将下面两个div包裹，但还是在父div的范围之内。--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;child&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>左浮是子div的左边接触父div的borderbox的左边，右浮是子div接触父div的borderbox右边，除非设置margin来撑开距离，否则一直是这个规则</p>
+</blockquote>
+<h3 id="BFC的区域不会与float-box重叠"><a href="#BFC的区域不会与float-box重叠" class="headerlink" title="BFC的区域不会与float box重叠"></a>BFC的区域不会与float box重叠</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;aside&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;text&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--下面是css代码--&gt;</span></span><br><span class="line">.aside &#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 150px;</span><br><span class="line">    float: left;</span><br><span class="line">    background: #f66;</span><br><span class="line">&#125;</span><br><span class="line">.main &#123;</span><br><span class="line">    height: 200px;</span><br><span class="line">    overflow: hidden;//触发main盒子的BFC</span><br><span class="line">    background: #fcc;</span><br><span class="line">&#125;</span><br><span class="line">.text&#123;</span><br><span class="line">    width: 500px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面<code>aside</code>盒子有一个浮动属性，覆盖了<code>main</code>盒子的内容，<code>main</code>盒子没有清除<code>aside</code>盒子的浮动。只做了一个动作，就是<code>触发自身的BFC</code>，然后就不再被<code>aside</code>盒子覆盖了。所以：<code>BFC</code>的区域不会与<code>float box</code>重叠。</p>
+</blockquote>
+<p><img src="/img/BFC3.gif" alt="Alt text"></p>
+<h2 id="BFC有哪些作用："><a href="#BFC有哪些作用：" class="headerlink" title="BFC有哪些作用："></a>BFC有哪些作用：</h2><ul>
+<li>1、自适应两栏布局</li>
+<li>2、可以阻止元素被浮动元素覆盖</li>
+<li>3、可以包含浮动元素——<code>清除内部浮动</code></li>
+<li>4、分属于不同的<code>BFC</code>时可以<code>阻止margin重叠</code></li>
+<li>5、阻止因为浏览器因为四舍五入造成的多列布局换行的情况</li>
+</ul>
+<h3 id="自适应两栏布局"><a href="#自适应两栏布局" class="headerlink" title="自适应两栏布局"></a>自适应两栏布局</h3><blockquote>
+<p><code>BFC</code>的区域不会与<code>float box</code>重叠，因此会根据包含块（父div）的宽度，和<code>aside</code>的宽度，自适应宽度。</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;aside&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;main&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--下面是css代码--&gt;</span></span><br><span class="line">.aside &#123;</span><br><span class="line">    width: 100px;</span><br><span class="line">    height: 150px;</span><br><span class="line">    float: left;</span><br><span class="line">    background: #f66;</span><br><span class="line">&#125;</span><br><span class="line">.main &#123;</span><br><span class="line">    height: 200px;</span><br><span class="line">    overflow: hidden;//触发main盒子的BFC</span><br><span class="line">    background: #fcc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/BFC4.gif" alt="Alt text"></p>
+<h3 id="分属于不同的BFC时可以阻止margin重叠"><a href="#分属于不同的BFC时可以阻止margin重叠" class="headerlink" title="分属于不同的BFC时可以阻止margin重叠"></a>分属于不同的<code>BFC</code>时可以<code>阻止margin重叠</code></h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">    <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">background</span>: lightblue;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">100px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这时候，两个盒子边距就变成了 <code>200px</code></p>
+</blockquote>
+<h3 id="可以包含浮动元素——清除内部浮动"><a href="#可以包含浮动元素——清除内部浮动" class="headerlink" title="可以包含浮动元素——清除内部浮动"></a>可以包含浮动元素——清除内部浮动</h3><blockquote>
+<p>清除浮动原理：触发父<code>div</code>的<code>BFC</code>属性，使下面的<code>子div</code>都处在<code>父div</code>的同一个<code>BFC</code>区域之内</p>
+</blockquote>
+<h3 id="阻止因为浏览器因为四舍五入造成的多列布局换行的情况"><a href="#阻止因为浏览器因为四舍五入造成的多列布局换行的情况" class="headerlink" title="阻止因为浏览器因为四舍五入造成的多列布局换行的情况"></a>阻止因为浏览器因为四舍五入造成的多列布局换行的情况</h3><blockquote>
+<p>有时候因为多列布局采用<code>小数点位的width</code>导致因为浏览器因为四舍五入造成的换行的情况，可以在<code>最后一列触发BFC</code>的形式来阻止换行的发生。比如下面栗子的特殊情况</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;container&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;column1&quot;</span>&gt;</span>column 1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;column2&quot;</span>&gt;</span>column 2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;column3&quot;</span>&gt;</span>column 3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span>&gt;</span>TOGGLE BLOCK FORMATTING CONTEXT<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.container</span> &#123;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.column1</span>,<span class="selector-class">.column2</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">31.3%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">  <span class="attribute">float</span>: left;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">1%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.column3</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">31.3%</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: green;</span><br><span class="line">  <span class="attribute">min-height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">1%</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.bfc</span> &#123;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">margin-top</span>: <span class="number">30px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.querySelector(<span class="string">&quot;button&quot;</span>),</span><br><span class="line">  column3 = <span class="built_in">document</span>.querySelector(<span class="string">&quot;.column3&quot;</span>);</span><br><span class="line">btn.addEventListener(</span><br><span class="line">  <span class="string">&quot;click&quot;</span>,</span><br><span class="line">  <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    column3.classList.toggle(<span class="string">&quot;bfc&quot;</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="literal">false</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h2 id="BFC-与-Layout"><a href="#BFC-与-Layout" class="headerlink" title="BFC 与 Layout"></a>BFC 与 Layout</h2><blockquote>
+<p><code>IE</code> 作为浏览器中的奇葩，当然不可能按部就班的支持 <code>BFC </code>标准，于是乎 <code>IE</code> 中有了 <code>Layout</code> 这个东西。</p>
+<p><code>Layout</code> 和 <code>BFC</code> 基本是等价的，为了处理 <code>IE</code> 的兼容性，在需要触发 <code>BFC</code> 时，我们除了需要用触发条件中的 <code>CSS</code> 属性来触发 <code>BFC</code>，</p>
+<p>还需要针对 <code>IE</code> 浏览器使用<code>zoom: 1</code>来触发 <code>IE</code> 浏览器的 <code>Layout</code>。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+              <a href="/tags/CSS%E6%8A%80%E5%B7%A7/" rel="tag"><i class="fa fa-tag"></i> CSS技巧</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/16/Class%E7%BB%A7%E6%89%BF/" rel="prev" title="ES6(16)class 继承">
+      <i class="fa fa-chevron-left"></i> ES6(16)class 继承
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/04/CSS%E6%B8%85%E7%A9%BA%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/" rel="next" title="CSS 清空默认样式">
+      CSS 清空默认样式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BFC%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">BFC的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FC"><span class="nav-number">1.1.</span> <span class="nav-text">FC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block-level-box-%E5%9D%97%E7%BA%A7%E7%9B%92%E5%AD%90"><span class="nav-number">1.2.</span> <span class="nav-text">block-level box(块级盒子)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E6%96%87%E6%A1%A3%E6%B5%81%E7%9A%84%E5%AE%9A%E4%BD%8D%E6%96%B9%E6%A1%88%EF%BC%88%E6%8E%A7%E5%88%B6%E5%85%83%E7%B4%A0%E7%9A%84%E5%B8%83%E5%B1%80%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">三种文档流的定位方案（控制元素的布局）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%84%E6%B5%81-normal-flow"><span class="nav-number">1.3.1.</span> <span class="nav-text">常规流 (normal flow)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%AE%E5%8A%A8-float"><span class="nav-number">1.3.2.</span> <span class="nav-text">浮动 (float)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B5%AE%E5%8A%A8%E4%BC%9A%E9%80%A0%E6%88%90%E6%96%87%E6%9C%AC%E7%8E%AF%E7%BB%95-%E5%92%8C-%E8%A1%8C%E5%86%85%E5%85%83%E7%B4%A0%E7%8E%AF%E7%BB%95"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">浮动会造成文本环绕 和 行内元素环绕</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D-absolute-positioning"><span class="nav-number">1.3.3.</span> <span class="nav-text">绝对定位 (absolute positioning)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A6%E5%8F%91BFC"><span class="nav-number">2.</span> <span class="nav-text">触发BFC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BFC%E5%B8%83%E5%B1%80%E8%A7%84%E5%88%99%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">BFC布局规则：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Box%E5%9E%82%E7%9B%B4%E6%96%B9%E5%90%91%E7%9A%84%E8%B7%9D%E7%A6%BB%E7%94%B1margin%E5%86%B3%E5%AE%9A%E3%80%82%E5%B1%9E%E4%BA%8E%E5%90%8C%E4%B8%80%E4%B8%AABFC%E7%9A%84%E4%B8%A4%E4%B8%AA%E7%9B%B8%E9%82%BBBox%E7%9A%84margin%E4%BC%9A%E5%8F%91%E7%94%9F%E9%87%8D%E5%8F%A0"><span class="nav-number">3.1.</span> <span class="nav-text">Box垂直方向的距离由margin决定。属于同一个BFC的两个相邻Box的margin会发生重叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%AA%E5%85%83%E7%B4%A0%E7%9A%84margin-box%E7%9A%84%E5%B7%A6%E8%BE%B9%EF%BC%8C-%E4%B8%8E%E5%8C%85%E5%90%AB%E5%9D%97border-box%E7%9A%84%E5%B7%A6%E8%BE%B9%E7%9B%B8%E6%8E%A5%E8%A7%A6-%E5%AF%B9%E4%BA%8E%E4%BB%8E%E5%B7%A6%E5%BE%80%E5%8F%B3%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%8C%96%EF%BC%8C%E5%90%A6%E5%88%99%E7%9B%B8%E5%8F%8D-%E3%80%82%E5%8D%B3%E4%BD%BF%E5%AD%98%E5%9C%A8%E6%B5%AE%E5%8A%A8%E4%B9%9F%E6%98%AF%E5%A6%82%E6%AD%A4"><span class="nav-number">3.2.</span> <span class="nav-text">每个元素的margin box的左边， 与包含块border box的左边相接触(对于从左往右的格式化，否则相反)。即使存在浮动也是如此</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BFC%E7%9A%84%E5%8C%BA%E5%9F%9F%E4%B8%8D%E4%BC%9A%E4%B8%8Efloat-box%E9%87%8D%E5%8F%A0"><span class="nav-number">3.3.</span> <span class="nav-text">BFC的区域不会与float box重叠</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BFC%E6%9C%89%E5%93%AA%E4%BA%9B%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">BFC有哪些作用：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E4%B8%A4%E6%A0%8F%E5%B8%83%E5%B1%80"><span class="nav-number">4.1.</span> <span class="nav-text">自适应两栏布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B1%9E%E4%BA%8E%E4%B8%8D%E5%90%8C%E7%9A%84BFC%E6%97%B6%E5%8F%AF%E4%BB%A5%E9%98%BB%E6%AD%A2margin%E9%87%8D%E5%8F%A0"><span class="nav-number">4.2.</span> <span class="nav-text">分属于不同的BFC时可以阻止margin重叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%8C%85%E5%90%AB%E6%B5%AE%E5%8A%A8%E5%85%83%E7%B4%A0%E2%80%94%E2%80%94%E6%B8%85%E9%99%A4%E5%86%85%E9%83%A8%E6%B5%AE%E5%8A%A8"><span class="nav-number">4.3.</span> <span class="nav-text">可以包含浮动元素——清除内部浮动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E6%AD%A2%E5%9B%A0%E4%B8%BA%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9B%A0%E4%B8%BA%E5%9B%9B%E8%88%8D%E4%BA%94%E5%85%A5%E9%80%A0%E6%88%90%E7%9A%84%E5%A4%9A%E5%88%97%E5%B8%83%E5%B1%80%E6%8D%A2%E8%A1%8C%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">4.4.</span> <span class="nav-text">阻止因为浏览器因为四舍五入造成的多列布局换行的情况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BFC-%E4%B8%8E-Layout"><span class="nav-number">5.</span> <span class="nav-text">BFC 与 Layout</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yapei Li"
+      src="/images/avatar.jpeg">
+  <p class="site-author-name" itemprop="name">Yapei Li</p>
+  <div class="site-description" itemprop="description">专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yapeili" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yapeili" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:webyapeili@sina.com" title="E-Mail → mailto:webyapeili@sina.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yapei Li</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">289k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">4:23</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/pjax/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script data-pjax>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>
