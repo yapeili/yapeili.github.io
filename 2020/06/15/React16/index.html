@@ -242,6 +242,7 @@
 <p>8、 无论作为父组件还是子组件，它都无法获悉另一个组件是否有状态，同时也不需要关心另一个组件是定义为函数组件还是类组件。<code>state</code>不能被自身组件以外的任何组件访问</p>
 <p>9、 单向数据流：任何<code>state</code>始终由某个特定的组件所有，并且从该<code>state</code>导出的任何数据或<code>ui</code>只能影响树中“下方”的组件</p>
 <p>10、 <code>React</code>中不能通过 <code>return false</code> 来阻止默认行为，必须明确调用<code>e.preventDefault()</code></p>
+<p>事件冒泡处理: 1、合成事件间,<code>e.stopPropagation()</code>;2、<code>原生事件</code>与最外层<code>document</code>上的事件间,<code>e.nativeEvent.stopImmediatePropagation()</code>;3、阻止<code>合成事件</code>与<code>除最外层document上的原生事件</code>,’判断<code>e.target</code>’</p>
 </blockquote>
 <a id="more"></a>
 
@@ -354,7 +355,7 @@
 <h3 id="JSX-指定属性值"><a href="#JSX-指定属性值" class="headerlink" title="JSX 指定属性值"></a>JSX 指定属性值</h3><ol>
 <li>使用双引号来指定字符串字面量作为属性值</li>
 <li>用花括号嵌入一个 <code>JavaScript</code> 表达式作为属性值</li>
-<li>在属性中嵌入 <code>JavaScript</code> 表达式时，不要使用引号将花括号括起来。</li>
+<li>在属性中嵌入 <code>JavaScript</code> 表达式时，<code>不要使用引号将花括号括起来</code>。</li>
 <li><code>引号</code>（用于字符串值）或<code>大括号</code>（用于表达式），不能同时使用于同一个属性</li>
 <li><code>react的属性名应用驼峰命名</code>，例如：<code>class</code> 变成了 <code>className</code>，<code>tabindex</code> 变成了 <code>tabIndex</code></li>
 </ol>
@@ -370,7 +371,7 @@
 </blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;h1&gt;Hello!&lt;/h1&gt;</span><br><span class="line">    &lt;h2&gt;Good to see you here.&lt;/h2&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
 <h3 id="JSX-原理-JSX是一个对象"><a href="#JSX-原理-JSX是一个对象" class="headerlink" title="JSX 原理(JSX是一个对象)"></a>JSX 原理(JSX是一个对象)</h3><blockquote>
-<p><code>JSX</code> 原理是：<code>Babel</code> 编译时调用<code>React.createElement()</code> ，将<code>jsx</code>编译为<code>React</code>元素对象（普通<code>js</code>对象）</p>
+<p><code>JSX</code> 原理是：<code>Babel</code> 编译时调用<code>React.createElement()</code> ，将<code>jsx</code>编译为<code>React</code>元素对象（普通<code>json</code>对象）</p>
 </blockquote>
 <p>下面的两种方法是完全相同的：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//jsx</span></span><br><span class="line"><span class="keyword">const</span> element = (</span><br><span class="line">  &lt;h1 className=<span class="string">&quot;greeting&quot;</span>&gt;</span><br><span class="line">    Hello, world!</span><br><span class="line">  &lt;/h1&gt;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">//react api</span></span><br><span class="line"><span class="keyword">const</span> element = React.createElement(</span><br><span class="line">  <span class="string">&#x27;h1&#x27;</span>,</span><br><span class="line">  &#123;<span class="attr">className</span>: <span class="string">&#x27;greeting&#x27;</span>&#125;,</span><br><span class="line">  <span class="string">&#x27;Hello, world!&#x27;</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
@@ -855,6 +856,11 @@
 <p>通常来说，当从组件的 <code>render</code> 方法返回一个元素时，它将被作为子元素被装载到最近父节点 <code>DOM</code> 中：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="comment">// React 装载一个新的 div，并将 children 渲染到这个 div 中</span></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &#123;<span class="built_in">this</span>.props.children&#125;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>然而，有时候希望将子元素插入到 <code>DOM</code> 节点的其他位置：</p>
+<blockquote>
+<p>React <em><code>不会</code></em> 创建一个新的 <code>div</code>。 </p>
+<p>把 <code>children</code> 渲染到 <code>domNode</code> 中</p>
+<p><code>domNode</code> 可以是任何有效的 DOM 节点，不管它在 DOM 中的位置</p>
+</blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">  <span class="comment">// React *不* 会创建一个新的 div。 它把 children 渲染到 `domNode` 中。</span></span><br><span class="line">  <span class="comment">// `domNode` 可以是任何有效的 DOM 节点，不管它在 DOM 中的位置。</span></span><br><span class="line">  <span class="keyword">return</span> ReactDOM.createPortal(</span><br><span class="line">    <span class="built_in">this</span>.props.children,</span><br><span class="line">    domNode,</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h3 id="典型用例："><a href="#典型用例：" class="headerlink" title="典型用例："></a>典型用例：</h3><p>当父组件有 <code>overflow: hidden</code> 或 <code>z-index</code> 样式，但你需要子组件能够在<code>视觉上 “跳出(break out)” 其容器</code>(<code>子组件不被父组件的overflow: hidden和z-index 影响</code>)。例如，对话框、<code>hovercards</code>以及提示框：</p>
@@ -937,8 +943,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/06/01/Vuex%E4%BD%BF%E7%94%A8/" rel="prev" title="Vuex使用">
-      <i class="fa fa-chevron-left"></i> Vuex使用
+    <a href="/2020/05/11/SCSS+BEM/" rel="prev" title="SCSS+BEM">
+      <i class="fa fa-chevron-left"></i> SCSS+BEM
     </a></div>
       <div class="post-nav-item">
     <a href="/2020/06/16/RenderProps/" rel="next" title="React 渲染属性(Render Props)">
@@ -1018,20 +1024,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1075,12 +1081,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">289k</span>
+    <span title="站点总字数">306k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:23</span>
+    <span title="站点阅读时长">4:38</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
