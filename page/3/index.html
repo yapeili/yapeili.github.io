@@ -162,6 +162,196 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/05/CSS%E4%BC%AA%E7%B1%BB&%E4%BC%AA%E5%85%83%E7%B4%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/05/CSS%E4%BC%AA%E7%B1%BB&%E4%BC%AA%E5%85%83%E7%B4%A0/" class="post-title-link" itemprop="url">CSS伪类&伪元素</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-05 20:39:04" itemprop="dateCreated datePublished" datetime="2020-05-05T20:39:04+08:00">2020-05-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><h3 id="什么是伪"><a href="#什么是伪" class="headerlink" title="什么是伪"></a>什么是伪</h3><ol>
+<li>不是真实的但有其外观；伪装的；假的或欺骗的；骗人的。</li>
+<li>差不多，很接近，或尽可能一样。<h3 id="为什么引入伪类，伪元素"><a href="#为什么引入伪类，伪元素" class="headerlink" title="为什么引入伪类，伪元素"></a>为什么引入伪类，伪元素</h3><blockquote>
+<p><code>css</code> 引入伪类和伪元素概念是为了格式化文档树以外的信息。</p>
+<p>也就是说，伪类和伪元素是用来修饰不在文档树中的部分，比如，一句话中的第一个字母，或者是列表中的第一个元素</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="什么是-伪类"><a href="#什么是-伪类" class="headerlink" title="什么是 伪类"></a>什么是 伪类</h3><blockquote>
+<p>伪类用于当已有元素处于的某个状态时，为其添加对应的样式，这个状态是根据用户行为而动态变化的。虽然它和普通的 <code>css</code> 类相似，可以为已有的元素添加样式，但是它只有处于 <code>dom树</code>无法描述的状态下才能为元素添加样式，所以将其称为伪类</p>
+<p>伪类是一个冒号（<code>:</code>）后跟伪类的名字构成的，有时候名字后面还会有一个放在括号里的值(<code>:nth-child</code>)</p>
+</blockquote>
+<h3 id="什么是-伪元素"><a href="#什么是-伪元素" class="headerlink" title="什么是 伪元素"></a>什么是 伪元素</h3><blockquote>
+<p>伪元素是一种<code>虚拟的元素</code>，<code>CSS</code>把它当成普通<code>HTML</code>元素看待。之所以叫伪元素，就因为它们在<code>文档树</code>或<code>DOM</code>中并<code>不实际存在</code>。换句话说，我们<code>不会在HTML</code>中包含伪元素，只会通过<code>CSS</code>来创建伪元素</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/05/CSS%E4%BC%AA%E7%B1%BB&%E4%BC%AA%E5%85%83%E7%B4%A0/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/04/CSS%E6%B8%85%E7%A9%BA%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/04/CSS%E6%B8%85%E7%A9%BA%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/" class="post-title-link" itemprop="url">CSS 清空默认样式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-04 21:39:04" itemprop="dateCreated datePublished" datetime="2020-05-04T21:39:04+08:00">2020-05-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSS/" itemprop="url" rel="index"><span itemprop="name">CSS</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 清除内外边距 */</span></span><br><span class="line"><span class="selector-tag">body</span>, <span class="selector-tag">h1</span>, <span class="selector-tag">h2</span>, <span class="selector-tag">h3</span>, <span class="selector-tag">h4</span>, <span class="selector-tag">h5</span>, <span class="selector-tag">h6</span>, <span class="selector-tag">hr</span>, <span class="selector-tag">p</span>, <span class="selector-tag">blockquote</span>, <span class="comment">/* structural elements 结构元素 */</span></span><br><span class="line"><span class="selector-tag">dl</span>, <span class="selector-tag">dt</span>, <span class="selector-tag">dd</span>, <span class="selector-tag">ul</span>, <span class="selector-tag">ol</span>, <span class="selector-tag">li</span>, <span class="comment">/* list elements 列表元素 */</span></span><br><span class="line"><span class="selector-tag">pre</span>, <span class="comment">/* text formatting elements 文本格式元素 */</span></span><br><span class="line"><span class="selector-tag">fieldset</span>, <span class="selector-tag">lengend</span>, <span class="selector-tag">button</span>, <span class="selector-tag">input</span>, <span class="selector-tag">textarea</span>, <span class="comment">/* form elements 表单元素 */</span></span><br><span class="line"><span class="selector-tag">th</span>, <span class="selector-tag">td</span> &#123; <span class="comment">/* table elements 表格元素 */</span></span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 设置默认字体 */</span></span><br><span class="line"><span class="selector-tag">body</span>,</span><br><span class="line"><span class="selector-tag">button</span>, <span class="selector-tag">input</span>, <span class="selector-tag">select</span>, <span class="selector-tag">textarea</span> &#123; <span class="comment">/* for ie */</span></span><br><span class="line">    <span class="comment">/*font: 12px/1 Tahoma, Helvetica, Arial, &quot;宋体&quot;, sans-serif;*/</span></span><br><span class="line">    <span class="attribute">font</span>: <span class="number">12px</span>/<span class="number">1</span> Tahoma, Helvetica, Arial, <span class="string">&quot;\5b8b\4f53&quot;</span>, sans-serif; <span class="comment">/* 用 ascii 字符表示，使得在任何编码下都无问题 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h1</span> &#123; <span class="attribute">font-size</span>: <span class="number">18px</span>; <span class="comment">/* 18px / 12px = 1.5 */</span> &#125;</span><br><span class="line"><span class="selector-tag">h2</span> &#123; <span class="attribute">font-size</span>: <span class="number">16px</span>; &#125;</span><br><span class="line"><span class="selector-tag">h3</span> &#123; <span class="attribute">font-size</span>: <span class="number">14px</span>; &#125;</span><br><span class="line"><span class="selector-tag">h4</span>, <span class="selector-tag">h5</span>, <span class="selector-tag">h6</span> &#123; <span class="attribute">font-size</span>: <span class="number">100%</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">address</span>, <span class="selector-tag">cite</span>, <span class="selector-tag">dfn</span>, <span class="selector-tag">em</span>, <span class="selector-tag">var</span> &#123; <span class="attribute">font-style</span>: normal; &#125; <span class="comment">/* 将斜体扶正 */</span></span><br><span class="line"><span class="selector-tag">code</span>, <span class="selector-tag">kbd</span>, <span class="selector-tag">pre</span>, <span class="selector-tag">samp</span>, <span class="selector-tag">tt</span> &#123; <span class="attribute">font-family</span>: <span class="string">&quot;Courier New&quot;</span>, Courier, monospace; &#125; <span class="comment">/* 统一等宽字体 */</span></span><br><span class="line"><span class="selector-tag">small</span> &#123; <span class="attribute">font-size</span>: <span class="number">12px</span>; &#125; <span class="comment">/* 小于 12px 的中文很难阅读，让 small 正常化 */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 重置列表元素 */</span></span><br><span class="line"><span class="selector-tag">ul</span>, <span class="selector-tag">ol</span> &#123; <span class="attribute">list-style</span>: none; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 重置文本格式元素 */</span></span><br><span class="line"><span class="selector-tag">a</span> &#123; <span class="attribute">text-decoration</span>: none; &#125;</span><br><span class="line"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span> &#123; <span class="attribute">text-decoration</span>: underline; &#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">abbr</span><span class="selector-attr">[title]</span>, <span class="selector-tag">acronym</span><span class="selector-attr">[title]</span> &#123; <span class="comment">/* 注：1.ie6 不支持 abbr; 2.这里用了属性选择符，ie6 下无效果 */</span></span><br><span class="line">    <span class="attribute">border-bottom</span>: <span class="number">1px</span> dotted;</span><br><span class="line">    <span class="attribute">cursor</span>: help;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">q</span><span class="selector-pseudo">:before</span>, <span class="selector-tag">q</span><span class="selector-pseudo">:after</span> &#123; <span class="attribute">content</span>: <span class="string">&#x27;&#x27;</span>; &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 清除浮动 */</span></span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&quot;020&quot;</span>; </span><br><span class="line">    <span class="attribute">display</span>: block; </span><br><span class="line">    <span class="attribute">height</span>: <span class="number">0</span>; </span><br><span class="line">    <span class="attribute">clear</span>: both; </span><br><span class="line">    <span class="attribute">visibility</span>: hidden;  </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">    <span class="attribute">zoom</span>: <span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">html</span>,<span class="selector-tag">body</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/04/CSS%E6%B8%85%E7%A9%BA%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/03/BFC/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1154,236 +1344,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Yapei Li">
-      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yapei Li">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/" class="post-title-link" itemprop="url">js高阶2、变量提升，作用域链,暂时性死区</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-19 21:39:04" itemprop="dateCreated datePublished" datetime="2019-05-19T21:39:04+08:00">2019-05-19</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Javascript%E9%AB%98%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">Javascript高阶</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="变量提升（预解析）："><a href="#变量提升（预解析）：" class="headerlink" title="变量提升（预解析）："></a>变量提升（预解析）：</h2><blockquote>
-<p>在 <strong><code>当前作用域</code></strong>  中 js代码自上而下执行之前，浏览器首先会把带  <code>‘var’或者 ‘function’</code> 关键字的进行<code>提前的‘声明或定义’</code>。</p>
-<blockquote>
-<p>声明（declare）：var num;在当前作用域声明</p>
-<p>定义（defined）：num=12;给声明的变量附一个值</p>
-</blockquote>
-</blockquote>
-<h3 id="页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升"><a href="#页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升" class="headerlink" title="页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量，当函数执行时才把函数内的私有作用域下的变量提升"></a><code>页面加载时只把全局作用域中的变量提升，不管私有作用域里的变量</code>，当函数执行时才把函数内的私有作用域下的变量提升</h3><h3 id="带var关键字的只是提前声明一下-并没有赋值；"><a href="#带var关键字的只是提前声明一下-并没有赋值；" class="headerlink" title="带var关键字的只是提前声明一下 并没有赋值；"></a>带var关键字的只是提前声明一下 并没有赋值；</h3><h3 id="带function关键字的在变量提升阶段把声明和定义都完成了"><a href="#带function关键字的在变量提升阶段把声明和定义都完成了" class="headerlink" title="带function关键字的在变量提升阶段把声明和定义都完成了"></a>带function关键字的在变量提升阶段把声明和定义都完成了</h3><h3 id="js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时-声明和定义都做过了"><a href="#js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时-声明和定义都做过了" class="headerlink" title="js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时 声明和定义都做过了"></a>js代码执行时遇到创建函数的代码直接跳过（不在声明也不进行赋值操作）因为变量提升时 声明和定义都做过了</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/05/19/js%E9%AB%98%E9%98%B62%E3%80%81%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%EF%BC%8C%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE,%E6%9A%82%E6%97%B6%E6%80%A7%E6%AD%BB%E5%8C%BA/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/18/js%E9%AB%98%E9%98%B61%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%81%E5%A0%86%E6%A0%88%E5%86%85%E5%AD%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Yapei Li">
-      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yapei Li">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/18/js%E9%AB%98%E9%98%B61%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%81%E5%A0%86%E6%A0%88%E5%86%85%E5%AD%98/" class="post-title-link" itemprop="url">js高阶1、数据类型的核心操作原理、堆栈内存</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-18 21:39:04" itemprop="dateCreated datePublished" datetime="2019-05-18T21:39:04+08:00">2019-05-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Javascript%E9%AB%98%E9%98%B6/" itemprop="url" rel="index"><span itemprop="name">Javascript高阶</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>全局作用域：<code>window</code>  <code>global</code></p>
-<p>变量和常量能存任何数据类型</p>
-</blockquote>
-<h2 id="js的数据类型"><a href="#js的数据类型" class="headerlink" title="js的数据类型"></a>js的数据类型</h2><h3 id="基础数据类型（值类型）"><a href="#基础数据类型（值类型）" class="headerlink" title="基础数据类型（值类型）"></a>基础数据类型（值类型）</h3><ul>
-<li><code>number</code></li>
-<li><code>string</code></li>
-<li><code>boolean</code></li>
-<li><code>null</code></li>
-<li><code>undefined</code></li>
-</ul>
-<h3 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h3><h4 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h4><ul>
-<li>{} <code>普通对象</code>（json）</li>
-<li>[] <code>数组</code></li>
-<li><code>/^$/</code> <code>正则</code></li>
-<li><code>Math 对象</code>数据类型</li>
-</ul>
-<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><ul>
-<li><code>function</code> 普通函数</li>
-<li>类</li>
-</ul>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a=<span class="number">10</span>;</span><br><span class="line"><span class="keyword">var</span> b=a;</span><br><span class="line">b=<span class="number">14</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a)  =&gt; <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//改变了同一空间地址内的键值</span></span><br><span class="line"><span class="keyword">var</span> c=&#123;<span class="attr">name</span>:<span class="string">&#x27;haha&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">var</span> d=c;</span><br><span class="line">d.name=<span class="string">&#x27;quququ&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(c) =&gt;  &#123;<span class="attr">name</span>: <span class="string">&quot;quququ&quot;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//从新定义了地址  不改变原有空间</span></span><br><span class="line"><span class="keyword">var</span> m=&#123;<span class="attr">name</span>:<span class="string">&#x27;aaa&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">var</span> n=m;</span><br><span class="line">n=&#123;<span class="attr">name</span>:<span class="string">&#x27;bbb&#x27;</span>&#125;</span><br><span class="line"><span class="built_in">console</span>.log(m.name) =&gt; aaa</span><br></pre></td></tr></table></figure>
-
-<h2 id="操作规律"><a href="#操作规律" class="headerlink" title="操作规律"></a>操作规律</h2><h3 id="值类型（基本数据类型）："><a href="#值类型（基本数据类型）：" class="headerlink" title="值类型（基本数据类型）："></a>值类型（基本数据类型）：</h3><blockquote>
-<p>var a=12;</p>
-</blockquote>
-<ul>
-<li>1)首先在<code>当前作用域中声明一个变量</code>a,没有赋值是 <code>undefined</code></li>
-<li>2）在当<code>前作用域</code>中<code>开辟一个位置存储</code>12</li>
-<li>3）让声明的变量和存储的12<code>进行关联</code></li>
-</ul>
-<blockquote>
-<p><code>直接按值操作：把原有的值复制一份，放在新的空间位置上，和原来的值没有关系。  变量间相互不影响</code></p>
-<p>一个变量只能存一个值</p>
-</blockquote>
-<h3 id="对象数据类型：（按内存空间操作"><a href="#对象数据类型：（按内存空间操作" class="headerlink" title="对象数据类型：（按内存空间操作)"></a>对象数据类型：（按内存空间操作)</h3><ul>
-<li>1、先<code>创建一个变量</code>（声明一个函数名和声明一个变量一样 ，如果两个变量名重复 是会冲突的）；</li>
-<li>2、浏览器为其<code>开辟一个新的内存空间</code>，为了方便别的地方找到这个空间 会给空间<code>分配一个16进制的地址</code> （16进制：0-9 a-f）</li>
-<li>3、<code>按照一定顺序，把对象中的键值对存到内存空间</code></li>
-<li>4、把开辟内存的地址赋值给变量（或者其他的东西比如事件），以后变量就可以通过地址找到内存空间然后进行操作</li>
-</ul>
-<blockquote>
-<p><code>操作的是空间的引用地址</code>：把原来空间地址赋值给新变量，但是空间没有被克隆，还是一个空间，这样就会出现<code>多个变量关联的是相同的空间</code>，<code>相互之间就会存在影响</code></p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/05/18/js%E9%AB%98%E9%98%B61%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C%E5%8E%9F%E7%90%86%E3%80%81%E5%A0%86%E6%A0%88%E5%86%85%E5%AD%98/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1451,20 +1415,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1508,12 +1472,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">306k</span>
+    <span title="站点总字数">340k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:38</span>
+    <span title="站点阅读时长">5:09</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>

@@ -543,6 +543,227 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/01/TypeScript/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/01/TypeScript/" class="post-title-link" itemprop="url">TypeScript</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-01 21:39:04" itemprop="dateCreated datePublished" datetime="2020-08-01T21:39:04+08:00">2020-08-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/TypeScript/" itemprop="url" rel="index"><span itemprop="name">TypeScript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>30k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>27 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <blockquote>
+<p>使用双重断言，先断言成兼容所有类型的 <code>any</code>，再断言为别的类型可以避免编译器将不会报错:<code>const element = (event as any) as HTMLElement</code></p>
+<p><code>null</code>和<code>undefined</code>是所有类型的子类型。 就是说可以把 <code>null</code>和<code>undefined</code>赋值给<code>number</code>类型的变量</p>
+<p>类型检查器不会去检查属性的顺序，只要相应的属性存在并且类型也是对的就可以</p>
+<p>对象字面量会被特殊对待而且会经过 额外属性检查，当将它们赋值给变量或作为参数传递的时候。 如果一个对象字面量存在任何“目标类型”不包含的属性时，会得到一个错误</p>
+<p>TypeScript支持两种索引签名：字符串和数字</p>
+<p>当使用 number来索引时，JavaScript会将它转换成string然后再去索引对象。也就是用 100（一个number）去索引等同于使用”100”（一个string）去索引，因此两者需要保持一致</p>
+<p>接口描述了实现类的公共部分，而不是公共和私有两部分；不会帮你检查类是否具有某些私有成员</p>
+<p>类类型的只是很重要</p>
+<p>默认为 public 类的外部可访问</p>
+<p>private类的外部不能访问</p>
+<p>protected 在派生类（继承类）内部可以访问</p>
+<p>构造函数也可以被标记成 <code>protected</code>,这意味着这个类不能在包含它的类外被实例化(不能 new)，但是能被继承</p>
+<p>返回值类型是函数类型的必要部分，如果函数没有返回任何值，也必须指定返回值类型为 void而不能不写。</p>
+<p>剩余参数会被当做个数不限的可选参数。 可以一个都没有，同样也可以有任意个；编译器创建参数数组，名字是在省略号（…）后面给定的名字，可以在函数体内使用这个数组</p>
+<p>泛型:在调用函数时确定入参与出参的类型,达到返回值的类型与传入参数的类型相同，的目的</p>
+</blockquote>
+<p>绕开额外的属性检查：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">interface SquareConfig &#123;</span><br><span class="line">    color?: string;</span><br><span class="line">    width?: number;</span><br><span class="line">    [propName: string]: any;  <span class="comment">//会带有任意数量的其它属性[propName: string]: any;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接口</span></span><br><span class="line"><span class="keyword">interface</span> SquareConfig &#123;</span><br><span class="line">  color?: <span class="built_in">string</span>;</span><br><span class="line">  width?: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line">                        <span class="comment">// 入参类型限定          //返回值限定</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createSquare</span>(<span class="params">config: SquareConfig</span>): </span>&#123;color: <span class="built_in">string</span>; area: <span class="built_in">number</span>&#125; &#123;</span><br><span class="line">  <span class="keyword">let</span> newSquare = &#123;color: <span class="string">&quot;white&quot;</span>, area: <span class="number">100</span>&#125;;</span><br><span class="line">  <span class="keyword">if</span> (config.color) &#123;</span><br><span class="line">    newSquare.color = config.color;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (config.width) &#123;</span><br><span class="line">    newSquare.area = config.width * config.width;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> newSquare;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> mySquare = createSquare(&#123;color: <span class="string">&quot;black&quot;</span>&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 泛型定义</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">identity</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//泛型使用 确定T类型</span></span><br><span class="line"><span class="keyword">let</span> output = identity&lt;string&gt;(<span class="string">&quot;myString&quot;</span>);  <span class="comment">// type of output will be &#x27;string&#x27;</span></span><br><span class="line"><span class="keyword">let</span> output = identity(<span class="string">&quot;myString&quot;</span>);  <span class="comment">// type of output will be &#x27;string&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//泛型函数loggingIdentity，接收类型参数T和参数arg，参数arg是类型是T的数组，并返回元素也是类型是T的数组</span></span><br><span class="line">function loggingIdentity&lt;T&gt;(arg: T[]): T[] &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Array has a .length, so no more error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//另一种实现</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: Array&lt;T&gt;</span>): <span class="title">Array</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Array has a .length, so no more error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//函数类型 接口</span></span><br><span class="line">interface SearchFunc &#123;</span><br><span class="line">                            <span class="comment">//入参： 返回值</span></span><br><span class="line">  (source: string, <span class="attr">subString</span>: string): boolean;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//对于函数类型的类型检查来说，函数的参数名不需要与接口里定义的名字相匹配</span></span><br><span class="line"><span class="keyword">let</span> mySearch: SearchFunc;</span><br><span class="line">mySearch = <span class="function"><span class="keyword">function</span>(<span class="params">src: string, sub: string</span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> result = src.search(sub);</span><br><span class="line">  <span class="keyword">return</span> result &gt; <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 断言</span></span><br><span class="line">interface Foo &#123;</span><br><span class="line">  bar: number;</span><br><span class="line">  bas: string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> foo = &#123;&#125; <span class="keyword">as</span> Foo;</span><br><span class="line">foo.bar = <span class="number">123</span>;</span><br><span class="line">foo.bas = <span class="string">&#x27;hello&#x27;</span>;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/08/01/TypeScript/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/23/React16%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpeg">
+      <meta itemprop="name" content="Yapei Li">
+      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yapei Li">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/23/React16%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" class="post-title-link" itemprop="url">React16组件生命周期</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-23 21:39:04" itemprop="dateCreated datePublished" datetime="2020-06-23T21:39:04+08:00">2020-06-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-22 21:39:04" itemprop="dateModified" datetime="2020-06-22T21:39:04+08:00">2020-06-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="挂载阶段的组件生命周期"><a href="#挂载阶段的组件生命周期" class="headerlink" title="挂载阶段的组件生命周期"></a>挂载阶段的组件生命周期</h2><blockquote>
+<p>把 React.js 将组件渲染，并且构造 DOM 元素然后塞入页面的过程称为组件的挂载    <strong>这是一个从无到有的过程</strong></p>
+</blockquote>
+<p>React.js 控制组件在页面上挂载和删除过程里面几个方法：</p>
+<ol>
+<li><p><code>componentWillMount</code>：组件挂载开始之前，也就是在组件调用 render 方法之前调用。</p>
+<blockquote>
+<p>17 版本会被抛弃，避免在此方法中引入任何 side-effects（例如，数据获取或动画） 或 subscriptions(订阅)。 对于这些用例，请改用componentDidMount()。</p>
+<p>建议使用 constructor() 来代替初始化状态</p>
+</blockquote>
+</li>
+<li><p><code>componentDidMount</code>：组件挂载完成以后，也就是 DOM 元素已经插入页面后调用。</p>
+</li>
+<li><p><code>componentWillUnmount</code>：组件对应的 DOM 元素从页面中删除之前调用。</p>
+</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/06/23/React16%E7%BB%84%E4%BB%B6%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/22/React%20Hook/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -900,221 +1121,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/18/React%20HOC/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Yapei Li">
-      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yapei Li">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/18/React%20HOC/" class="post-title-link" itemprop="url">React 高阶组件 HOC</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-18 21:39:04" itemprop="dateCreated datePublished" datetime="2020-06-18T21:39:04+08:00">2020-06-18</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>16k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>15 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="高阶组件-Higher-Order-Components-能够接受一个组件并返回一个新的组件"><a href="#高阶组件-Higher-Order-Components-能够接受一个组件并返回一个新的组件" class="headerlink" title="高阶组件(Higher-Order Components): 能够接受一个组件并返回一个新的组件"></a>高阶组件(Higher-Order Components): 能够接受一个组件并返回一个新的组件</h3><blockquote>
-<p>高阶组件（HOC）是 <code>React</code> 中用于重用组件逻辑的高级技术 </p>
-<p><code>HOC</code> 本身<code>不是 React API 的一部分</code>,是<code>从 React 构思本质中浮现出来的一种模式</code></p>
-<p>高阶组件(HOC)<code>是一个函数</code>，能够接受一个组件并返回一个新的组件</p>
-<p>组件是将 <code>props</code> 转化成 <code>UI</code> ，然而高阶组件<code>将一个组价转化成另外一个组件</code>。</p>
-<p><code>相当于高阶组件接收一个组件，然后给组件添加一个data 的props属性 返回出来</code></p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> EnhancedComponent = higherOrderComponent(WrappedComponent);</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>之前使用<code>mixins</code>作为解决交叉问题的方法，现在被抛弃了</p>
-<p><code>组件是React中代码重用的最小单元</code></p>
-<p><code>高阶组件</code>既<code>不会修改输入组件</code>，也<code>不会通过继承来复制行为</code>。</p>
-<p><code>高阶组件是纯函数</code></p>
-<p>高阶组件（HOC）并<code>不关心数据将会如何或者为什么使用</code>，并且被包裹的元素并<code>不关心数据的源头</code>。</p>
-</blockquote>
-<h3 id="高阶组件的实现"><a href="#高阶组件的实现" class="headerlink" title="高阶组件的实现"></a>高阶组件的实现</h3><h4 id="1、属性代理：本质上是使用组合的方式，通过将组件包装在容器组件中实现功能"><a href="#1、属性代理：本质上是使用组合的方式，通过将组件包装在容器组件中实现功能" class="headerlink" title="1、属性代理：本质上是使用组合的方式，通过将组件包装在容器组件中实现功能"></a>1、属性代理：本质上是使用组合的方式，通过将组件包装在容器组件中实现功能</h4><h4 id="2、反向继承：使用一个函数接受一个组件作为参数传入，并返回一个继承了该传入组件的类组件，且在返回组件的-render-方法中返回-super-render-方法"><a href="#2、反向继承：使用一个函数接受一个组件作为参数传入，并返回一个继承了该传入组件的类组件，且在返回组件的-render-方法中返回-super-render-方法" class="headerlink" title="2、反向继承：使用一个函数接受一个组件作为参数传入，并返回一个继承了该传入组件的类组件，且在返回组件的 render() 方法中返回 super.render() 方法"></a>2、反向继承：使用一个函数接受一个组件作为参数传入，并返回一个继承了该传入组件的类组件，且在返回组件的<code> render()</code> 方法中返回 <code>super.render()</code> 方法</h4><blockquote>
-<p>运用了很多<code>AOP</code>切片编程是思想</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/18/React%20HOC/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/17/Refs%E5%92%8CDOM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpeg">
-      <meta itemprop="name" content="Yapei Li">
-      <meta itemprop="description" content="专注于前端领域,Javascript,Vue,react,node,前端架构,全栈开发,浏览器。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yapei Li">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/17/Refs%E5%92%8CDOM/" class="post-title-link" itemprop="url">Refs 和 DOM</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-17 21:39:04" itemprop="dateCreated datePublished" datetime="2020-06-17T21:39:04+08:00">2020-06-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>7k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Refs-和-DOM"><a href="#Refs-和-DOM" class="headerlink" title="Refs 和 DOM"></a>Refs 和 DOM</h2><blockquote>
-<p><code>Refs</code> 提供了一种在 <code>render</code> 方法中创建<code>DOM 节点</code>或 <code>React 元素</code>的方式</p>
-<p><code>在常规的 React 数据流中，props 是父组件与子组件交互的唯一方式</code>。要修改子元素，你需要用新的 <code>props</code> 去重新渲染子元素。</p>
-<p><code>Refs</code>：<code>强制修改子元素</code>。</p>
-<p>被修改的子元素可以是<code> React组件实例</code>（类组件实例），或者是一个 <code>DOM 元素</code>，<code>不能使函数组件</code></p>
-</blockquote>
-<h3 id="何时使用-Refs"><a href="#何时使用-Refs" class="headerlink" title="何时使用 Refs"></a><code>何时使用 Refs</code></h3><ol>
-<li>处理<code>focus</code>、<code>文本选择</code>或者<code>媒体播放</code></li>
-<li>触发强制<code>动画</code></li>
-<li>集成第三方<code>DOM库</code></li>
-<li>如果可以通过声明式实现，就尽量避免使用 <code>refs</code></li>
-</ol>
-<h3 id="不要过度使用-Refs"><a href="#不要过度使用-Refs" class="headerlink" title="不要过度使用 Refs"></a>不要过度使用 Refs</h3><blockquote>
-<p>能使用<code>状态提升</code>运用<code>state</code>改变组件状态，不要使用 <code>refs</code> 来更新组件</p>
-</blockquote>
-<h3 id="创建-Refs-React-createRef"><a href="#创建-Refs-React-createRef" class="headerlink" title="创建 Refs: React.createRef()"></a>创建 Refs: React.createRef()</h3><blockquote>
-<p>使用 <code>React.createRef()</code> 创建 <code>refs</code>，通过 <code>ref </code>属性来获得 子元素。</p>
-<p>当构造组件时，<code>refs</code> 通常被赋值给实例的一个属性，这样你可以在组件中任意一处使用它们.</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/17/Refs%E5%92%8CDOM/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1182,20 +1192,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-count">42</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1239,12 +1249,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">306k</span>
+    <span title="站点总字数">340k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">4:38</span>
+    <span title="站点阅读时长">5:09</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
